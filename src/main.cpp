@@ -1,6 +1,6 @@
 #include <iostream>
-#include "inc/snake_game.h"
-#include "inc/Snake_Error.h"
+#include "../inc/snake_game.h"
+#include "../inc/Snake_Error.h"
 
 int main ()
 {

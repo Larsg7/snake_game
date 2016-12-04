@@ -1,15 +1,27 @@
-#include <GL/gl.h>
+#include <GL/glew.h>
 
 #include "../inc/snake_game.h"
 #include "../inc/Snake_Error.h"
+#include "../inc/sprite.h"
+
 
 Snake::Snake ( unsigned b_width, unsigned b_height )
-    : _width ( b_width ), _height ( b_height ), _window ( nullptr ), _game_state ( GameState::PLAY )
+    : _board_width ( b_width )
+      , _board_height ( b_height )
+      , _window ( nullptr )
+      , _game_state ( GameState::PLAY )
 {
     if ( SDL_Init( SDL_INIT_EVERYTHING ) < 0 )
     {
-        throw Snake_Error ( "Error initiliazing SDL!" );
+        std::string error ( SDL_GetError() );
+        throw Snake_Error ( "Error initializing SDL: " + error );
     }
+
+    SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
+    SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 3 );
+    SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 2 );
+    SDL_GL_SetAttribute( SDL_GL_STENCIL_SIZE, 8 );
+    SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
     _window = SDL_CreateWindow( "Snake Game"
                                 , SDL_WINDOWPOS_UNDEFINED
@@ -22,10 +34,37 @@ Snake::Snake ( unsigned b_width, unsigned b_height )
         std::string error ( SDL_GetError() );
         throw Snake_Error ( "Could not initialize window: " + error );
     }
+
+    /* OpenGL initializations */
+
+    SDL_GLContext glContext = SDL_GL_CreateContext( _window );
+
+    if ( glContext == nullptr )
+    {
+        std::string error ( SDL_GetError() );
+        throw Snake_Error ( "SDL_GLContext could not be created: " + error );
+    }
+
+    glewExperimental = GL_TRUE;
+
+    if ( glewInit() != GLEW_OK )
+    {
+        throw Snake_Error ( "Could not init glew!" );
+    }
+
+    glClearColor( 0, 0, 1, 1 );
 }
 
 void Snake::run ()
 {
+    _sprite.init( -1, -1, 1, 1 );
+
+    GLuint vertexBuffer;
+    glGenBuffers(1, &vertexBuffer);
+
+    printf("%u\n", vertexBuffer);
+
+
     game_loop();
 }
 
@@ -34,6 +73,9 @@ void Snake::game_loop ()
     while ( _game_state == GameState::PLAY )
     {
         process_input();
+
+        drawGame();
+        SDL_Delay( 50 );
     }
 }
 
@@ -52,6 +94,16 @@ void Snake::process_input ()
                 break;
         }
     }
+}
+
+void Snake::drawGame ()
+{
+    glClearDepth( 1.0 );
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+
+    _sprite.draw();
+
+    SDL_GL_SwapWindow( _window );
 }
 
 Snake::~Snake ()
