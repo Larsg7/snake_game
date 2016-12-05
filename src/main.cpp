@@ -11,12 +11,13 @@ int main ()
     }
     catch ( const Snake_Error& e )
     {
-        printf( "There was an error: %s", e.what() );
+        fprintf( stderr, "FATAL ERROR - on line %d in file '%s':\n%s"
+                , e.get_line(), e.get_file(), e.what() );
         return 1;
     }
     catch ( ... )
     {
-        printf( "There was an unknown error!" );
+        fprintf( stderr, "There was an unknown error!" );
         return 1;
     }
 

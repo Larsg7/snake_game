@@ -4,13 +4,23 @@
 #include <string>
 #include <GL/glew.h>
 
-class GLSLProgram
+
+/**
+ * \brief Class to Compile and Link GLSL code
+ * Supports vertex and fragment shaders.
+ */
+class GLSLCompiler
 {
 public:
-    GLSLProgram ();
+    GLSLCompiler ();
 
-    virtual ~GLSLProgram ();
+    virtual ~GLSLCompiler ();
 
+    /**
+     * \brief Method to compile a vertex and a fragment shader
+     * \param vertexShaderFilePath
+     * \param fragmentShaderFilePath
+     */
     void compileShaders ( const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath );
 
     void linkShaders ();
@@ -20,6 +30,11 @@ private:
     GLuint _vertexShaderID;
     GLuint _fragmentShaderID;
 
+    /**
+     * \brief Method to compile one shader
+     * \param compilePath
+     * \param id
+     */
     void compileShader ( const std::string& compilePath, const GLuint id );
 };
 

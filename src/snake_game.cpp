@@ -14,7 +14,8 @@ Snake::Snake ( unsigned b_width, unsigned b_height )
     if ( SDL_Init( SDL_INIT_EVERYTHING ) < 0 )
     {
         std::string error ( SDL_GetError() );
-        throw Snake_Error ( "Error initializing SDL: " + error );
+        throw Snake_Error ( "Error initializing SDL: " + error
+                , __LINE__, __FILE__ );
     }
 
     SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
@@ -31,8 +32,8 @@ Snake::Snake ( unsigned b_width, unsigned b_height )
 
     if ( _window == nullptr )
     {
-        std::string error ( SDL_GetError() );
-        throw Snake_Error ( "Could not initialize window: " + error );
+        throw Snake_Error ( "Could not initialize window: " + std::string( SDL_GetError() )
+                , __LINE__, __FILE__ );
     }
 
     /* OpenGL initializations */
@@ -41,15 +42,16 @@ Snake::Snake ( unsigned b_width, unsigned b_height )
 
     if ( glContext == nullptr )
     {
-        std::string error ( SDL_GetError() );
-        throw Snake_Error ( "SDL_GLContext could not be created: " + error );
+        throw Snake_Error ( "SDL_GLContext could not be created: " + std::string( SDL_GetError() )
+                , __LINE__, __FILE__ );
     }
 
     glewExperimental = GL_TRUE;
 
     if ( glewInit() != GLEW_OK )
     {
-        throw Snake_Error ( "Could not init glew!" );
+        throw Snake_Error ( "Could not init glew!"
+                , __LINE__, __FILE__ );
     }
 
     glClearColor( 0, 0, 1, 1 );
