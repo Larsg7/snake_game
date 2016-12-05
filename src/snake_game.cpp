@@ -1,3 +1,4 @@
+#define GLEW_STATIC
 #include <GL/glew.h>
 
 #include "../inc/snake_game.h"
@@ -10,6 +11,7 @@ Snake::Snake ( unsigned b_width, unsigned b_height )
       , _board_height ( b_height )
       , _window ( nullptr )
       , _game_state ( GameState::PLAY )
+      , _vaoID ( 0 )
 {
     if ( SDL_Init( SDL_INIT_EVERYTHING ) < 0 )
     {
@@ -54,18 +56,25 @@ Snake::Snake ( unsigned b_width, unsigned b_height )
                 , __LINE__, __FILE__ );
     }
 
-    glClearColor( 0, 0, 1, 1 );
+    glGenVertexArrays( 1, &_vaoID );
+    glBindVertexArray( _vaoID );
+
+    glClearColor( 1, 0, 1, 1 );
+
+    initShaders();
+}
+
+void Snake::initShaders ()
+{
+    _colorProgram.compileShaders( "../shaders/colorShading.vert", "../shaders/colorShading.frag" );
+    _colorProgram.addAttribute( "vertexPosition" );
+    _colorProgram.linkShaders();
 }
 
 void Snake::run ()
 {
+
     _sprite.init( -1, -1, 1, 1 );
-
-    GLuint vertexBuffer;
-    glGenBuffers(1, &vertexBuffer);
-
-    printf("%u\n", vertexBuffer);
-
 
     game_loop();
 }
@@ -77,7 +86,7 @@ void Snake::game_loop ()
         process_input();
 
         drawGame();
-        SDL_Delay( 50 );
+        //SDL_Delay( 50 );
     }
 }
 
@@ -103,7 +112,11 @@ void Snake::drawGame ()
     glClearDepth( 1.0 );
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-    _sprite.draw();
+    _colorProgram.use();
+
+    _sprite.draw( 0 );
+
+    _colorProgram.unuse();
 
     SDL_GL_SwapWindow( _window );
 }

@@ -14,7 +14,7 @@ public:
 
     void init ( float _x, float _y, float _width, float _height );
 
-    void draw ();
+    void draw ( GLuint attrArray );
 
 private:
     float _x;

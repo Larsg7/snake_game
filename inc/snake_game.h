@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include "sprite.h"
+#include "GLSLCompiler.h"
 
 enum class GameState {PLAY, QUIT};
 
@@ -16,6 +17,8 @@ public:
      * Handles Menus and the game loop.
      */
     void run ();
+
+    void initShaders ();
 
     /**
      * \brief Contains the game loop.
@@ -32,6 +35,7 @@ public:
     virtual ~Snake ();
 
 private:
+    GLuint _vaoID;
     /** Main game window */
     SDL_Window* _window;
 
@@ -43,6 +47,8 @@ private:
     GameState _game_state;
 
     Sprite _sprite;
+
+    GLSLCompiler _colorProgram;
 };
 
 

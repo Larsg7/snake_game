@@ -25,10 +25,19 @@ public:
 
     void linkShaders ();
 
+    void addAttribute ( const std::string& attributeName );
+
+    GLint get_attrLocation ( const std::string& attributeName ) const;
+
+    void use ();
+    void unuse ();
+
 private:
     GLuint _programID;
     GLuint _vertexShaderID;
     GLuint _fragmentShaderID;
+
+    GLuint _numAttributes;
 
     /**
      * \brief Method to compile one shader
