@@ -12,15 +12,15 @@ void Sprite::init ( float x, float y, float width, float height )
     _height = height;
     _vboID = 0;
 
-    if ( _vboID != 0 )
+    if ( _vboID == 0 )
     {
         glGenBuffers( 1, &_vboID );
+    }
 
-        if ( _vboID == 0 )
-        {
-            throw Snake_Error ( "Could not generate buffer!"
-                    , __LINE__, __FILE__ );
-        }
+    if ( _vboID == 0 )
+    {
+        throw Snake_Error ( "Could not generate buffer!"
+                , __LINE__, __FILE__ );
     }
 
     // vertices for a quad
@@ -56,7 +56,7 @@ void Sprite::draw ( GLuint attrArray )
     glEnableVertexAttribArray( 0 );
 
     glVertexAttribPointer( 0, 2, GL_FLOAT, GL_FALSE, 0, 0 );
-    printf("test\n");
+
     glDrawArrays( GL_TRIANGLES, 0, 6 );
 
     glDisableVertexAttribArray( 0 );

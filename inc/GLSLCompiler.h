@@ -32,7 +32,7 @@ public:
     void use ();
     void unuse ();
 
-private:
+
     GLuint _programID;
     GLuint _vertexShaderID;
     GLuint _fragmentShaderID;

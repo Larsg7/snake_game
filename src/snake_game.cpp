@@ -1,5 +1,6 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
+#include <iostream>
 
 #include "../inc/snake_game.h"
 #include "../inc/Snake_Error.h"
@@ -59,7 +60,7 @@ Snake::Snake ( unsigned b_width, unsigned b_height )
     glGenVertexArrays( 1, &_vaoID );
     glBindVertexArray( _vaoID );
 
-    glClearColor( 1, 0, 1, 1 );
+    glClearColor( 0, 0, 1, 1 );
 
     initShaders();
 }
@@ -73,8 +74,7 @@ void Snake::initShaders ()
 
 void Snake::run ()
 {
-
-    _sprite.init( -1, -1, 1, 1 );
+    _sprite.init( -1, -1, 2, 1 );
 
     game_loop();
 }
@@ -87,6 +87,11 @@ void Snake::game_loop ()
 
         drawGame();
         //SDL_Delay( 50 );
+    }
+
+    for(GLenum err; (err = glGetError()) != GL_NO_ERROR;)
+    {
+        fprintf( stderr, "ERROR: OpenGL error %d.", err );
     }
 }
 
