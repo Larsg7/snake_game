@@ -29,10 +29,12 @@ public:
 
     GLint get_attrLocation ( const std::string& attributeName ) const;
 
+    GLint get_uniformLocation ( const std::string& uniformName );
+
     void use ();
     void unuse ();
 
-
+private:
     GLuint _programID;
     GLuint _vertexShaderID;
     GLuint _fragmentShaderID;

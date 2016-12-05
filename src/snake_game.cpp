@@ -10,6 +10,7 @@ Snake::Snake ( unsigned b_width, unsigned b_height )
       , _window ( nullptr )
       , _game_state ( GameState::PLAY )
       , _vaoID ( 0 )
+      , _time ( 0 )
 {
     if ( SDL_Init( SDL_INIT_EVERYTHING ) < 0 )
     {
@@ -82,7 +83,7 @@ void Snake::game_loop ()
     while ( _game_state == GameState::PLAY )
     {
         process_input();
-
+        _time += 0.01;
         drawGame();
         //SDL_Delay( 50 );
     }
@@ -116,6 +117,10 @@ void Snake::drawGame ()
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     _colorProgram.use();
+
+    GLint timeLocation = _colorProgram.get_uniformLocation( "time" );
+
+    glUniform1f( timeLocation, _time );
 
     _sprite.draw( 0 );
 

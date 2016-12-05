@@ -53,6 +53,8 @@ void Sprite::init ( float x, float y, float width, float height )
 
     vertexData[1].color.red = 0;
 
+    vertexData[4].color.green = 255;
+
     glBindBuffer( GL_ARRAY_BUFFER, _vboID );
 
     glBufferData( GL_ARRAY_BUFFER, sizeof( vertexData ), vertexData, GL_STATIC_DRAW );

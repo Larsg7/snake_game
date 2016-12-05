@@ -5,6 +5,8 @@ in vec4 vertexColor;
 
 out vec4 fragmentColor;
 
+uniform float time;
+
 void main ()
 {
     gl_Position.xy = vertexPosition;
