@@ -1,11 +1,8 @@
-#define GLEW_STATIC
 #include <GL/glew.h>
 #include <iostream>
 
 #include "../inc/snake_game.h"
 #include "../inc/Snake_Error.h"
-#include "../inc/sprite.h"
-
 
 Snake::Snake ( unsigned b_width, unsigned b_height )
     : _board_width ( b_width )
@@ -69,12 +66,13 @@ void Snake::initShaders ()
 {
     _colorProgram.compileShaders( "../shaders/colorShading.vert", "../shaders/colorShading.frag" );
     _colorProgram.addAttribute( "vertexPosition" );
+    _colorProgram.addAttribute( "vertexColor" );
     _colorProgram.linkShaders();
 }
 
 void Snake::run ()
 {
-    _sprite.init( -1, -1, 2, 1 );
+    _sprite.init( -1, -1, 2, 2 );
 
     game_loop();
 }
@@ -91,7 +89,7 @@ void Snake::game_loop ()
 
     for(GLenum err; (err = glGetError()) != GL_NO_ERROR;)
     {
-        fprintf( stderr, "ERROR: OpenGL error %d.", err );
+        fprintf( stderr, "ERROR: OpenGL error %d.\n", err );
     }
 }
 
