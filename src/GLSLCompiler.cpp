@@ -94,7 +94,7 @@ GLint GLSLCompiler::get_attrLocation ( const std::string& attributeName ) const
 GLint GLSLCompiler::get_uniformLocation ( const std::string& uniformName )
 {
     GLint location = glGetUniformLocation( _programID, uniformName.c_str() );
-    if ( location == GL_INVALID_INDEX )
+    if ( location == -1 )
     {
         throw Snake_Error ( "Uniform '" + uniformName + "' not found!"
                 , __LINE__, __FILE__ );

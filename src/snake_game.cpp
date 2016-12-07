@@ -83,7 +83,7 @@ void Snake::game_loop ()
     while ( _game_state == GameState::PLAY )
     {
         process_input();
-        _time += 0.01;
+        _time += 0.001;
         drawGame();
         //SDL_Delay( 50 );
     }
