@@ -28,8 +28,7 @@ void Sprite::init ( float x, float y, float width, float height )
     Vertex vertexData[6];
 
     // first triangle
-    vertexData[0].position.x = _x + _width;
-    vertexData[0].position.y = _y + _height;
+    vertexData[0].setPosition( _x + _width, _y + _height );
     vertexData[1].position.x = _x;
     vertexData[1].position.y = _y + _height;
     vertexData[2].position.x = _x;
@@ -45,10 +44,7 @@ void Sprite::init ( float x, float y, float width, float height )
 
     for ( int i = 0; i < 6; ++i )
     {
-        vertexData[i].color.red = 255;
-        vertexData[i].color.green = 0;
-        vertexData[i].color.blue = 255;
-        vertexData[i].color.alpha = 255;
+       vertexData[i].setColor( 255, 255, 0, 255 );
     }
 
     vertexData[1].color.red = 0;

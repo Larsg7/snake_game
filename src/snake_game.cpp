@@ -3,6 +3,7 @@
 
 #include "../inc/snake_game.h"
 #include "../inc/Snake_Error.h"
+#include "../inc/Image_loader.h"
 
 Snake::Snake ( unsigned b_width, unsigned b_height )
     : _board_width ( b_width )
@@ -74,6 +75,8 @@ void Snake::initShaders ()
 void Snake::run ()
 {
     _sprite.init( -1, -1, 2, 2 );
+
+    _playerTexture = Image_loader::loadPNG( "../media/PNG/CharacterRight_Standing.png" );
 
     game_loop();
 }

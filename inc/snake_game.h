@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include "sprite.h"
 #include "GLSLCompiler.h"
+#include "gl_texture.h"
 
 enum class GameState {PLAY, QUIT};
 
@@ -47,6 +48,8 @@ private:
     GameState _game_state;
 
     Sprite _sprite;
+
+    GLTexture _playerTexture;
 
     GLSLCompiler _colorProgram;
 

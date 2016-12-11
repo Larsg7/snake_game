@@ -5,7 +5,7 @@
 
 bool IOManager::read_file_to_buffer ( std::vector<unsigned char>& buffer, const std::string filePath )
 {
-    std::fstream file ( filePath, std::ios::binary );
+    std::fstream file ( filePath, std::ios::binary | std::ios::in );
 
     if ( file.fail() )
     {

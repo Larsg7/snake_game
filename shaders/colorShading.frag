@@ -9,5 +9,6 @@ uniform float time;
 void main ()
 {
 	color = fragmentColor;
-	color.x = (1 + sin( time )) / 2;
+
+	color.x = time;
 }

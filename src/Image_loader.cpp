@@ -1,9 +1,9 @@
-#include "../inc/image_loader.h"
+#include "../inc/Image_loader.h"
 #include "../inc/picoPNG.h"
 #include "../inc/iomanager.h"
 #include "../inc/Snake_Error.h"
 
-GLTexture image_loader::loadPNG ( std::string filePath )
+GLTexture Image_loader::loadPNG ( std::string filePath )
 {
     GLTexture texture = {};
 
@@ -18,7 +18,7 @@ GLTexture image_loader::loadPNG ( std::string filePath )
     }
     catch ( const Snake_Error& e )
     {
-        fprintf( stderr, "Error reading image '%s'\n", filePath );
+        fprintf( stderr, "Error reading image '%s'\n", filePath.c_str() );
         throw e;
     }
 
