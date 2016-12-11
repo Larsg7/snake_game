@@ -1,7 +1,3 @@
-//
-// Created by lars on 12/7/16.
-//
-
 #ifndef SNAKE_IMAGE_LOADER_H
 #define SNAKE_IMAGE_LOADER_H
 
