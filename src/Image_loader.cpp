@@ -33,7 +33,7 @@ GLTexture Image_loader::loadPNG ( std::string filePath )
     glGenTextures( 1, &(texture.id) );
 
     glBindTexture( GL_TEXTURE_2D, texture.id );
-    glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &(out[0]) );
+    glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, static_cast<int>(width), static_cast<int>(height), 0, GL_RGBA, GL_UNSIGNED_BYTE, &(out[0]) );
 
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
@@ -44,8 +44,8 @@ GLTexture Image_loader::loadPNG ( std::string filePath )
 
     glBindTexture( GL_TEXTURE_2D, 0 );
 
-    texture.width = width;
-    texture.height = height;
+    texture.width = static_cast<int>(width);
+    texture.height = static_cast<int>(height);
 
     return texture;
 }

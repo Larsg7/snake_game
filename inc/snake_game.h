@@ -2,6 +2,7 @@
 #define SNAKE_SNAKE_GAME_H
 
 #include <SDL2/SDL.h>
+#include <vector>
 #include "sprite.h"
 #include "GLSLCompiler.h"
 #include "gl_texture.h"
@@ -47,7 +48,7 @@ private:
     /** Current game state */
     GameState _game_state;
 
-    Sprite _sprite;
+    std::vector<Sprite*> _sprites;
 
     GLTexture _playerTexture;
 

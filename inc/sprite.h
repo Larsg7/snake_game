@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 
 #include "../inc/sprite.h"
+#include "gl_texture.h"
 
 class Sprite
 {
@@ -12,7 +13,7 @@ public:
 
     virtual ~Sprite ();
 
-    void init ( float _x, float _y, float _width, float _height );
+    void init ( float _x, float _y, float _width, float _height, std::string texture_path );
 
     void draw ( GLuint attrArray );
 
@@ -22,6 +23,7 @@ private:
     float _width;
     float _height;
     GLuint _vboID;
+    GLTexture _texture;
 };
 
 

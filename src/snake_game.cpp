@@ -69,14 +69,17 @@ void Snake::initShaders ()
     _colorProgram.compileShaders( "../shaders/colorShading.vert", "../shaders/colorShading.frag" );
     _colorProgram.addAttribute( "vertexPosition" );
     _colorProgram.addAttribute( "vertexColor" );
+    _colorProgram.addAttribute( "vertexUV" );
     _colorProgram.linkShaders();
 }
 
 void Snake::run ()
 {
-    _sprite.init( -1, -1, 2, 2 );
+    _sprites.push_back( new Sprite() );
+    _sprites.back()->init( -1, -1, 1, 1, "../media/PNG/CharacterRight_Standing.png" );
 
-    _playerTexture = Image_loader::loadPNG( "../media/PNG/CharacterRight_Standing.png" );
+    _sprites.push_back( new Sprite() );
+    _sprites.back()->init( 0, 0, 1, 1, "../media/PNG/CharacterRight_Standing.png" );
 
     game_loop();
 }
@@ -120,12 +123,20 @@ void Snake::drawGame ()
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     _colorProgram.use();
+    glActiveTexture( GL_TEXTURE0 );
+    GLint textureLocation = _colorProgram.get_uniformLocation( "mySampler" );
+    glUniform1i( textureLocation, 0 );
 
-    GLint timeLocation = _colorProgram.get_uniformLocation( "time" );
+    //GLint timeLocation = _colorProgram.get_uniformLocation( "time" );
 
-    glUniform1f( timeLocation, _time );
+    //glUniform1f( timeLocation, _time );
 
-    _sprite.draw( 0 );
+    for ( auto&& sprite : _sprites )
+    {
+        sprite->draw( 0 );
+    }
+
+    glBindTexture( GL_TEXTURE_2D, 0 );
 
     _colorProgram.unuse();
 

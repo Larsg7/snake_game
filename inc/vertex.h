@@ -43,7 +43,7 @@ struct Vertex
         position.y = y;
     }
 
-    void setUv ( float u, float v )
+    void setUV ( float u, float v )
     {
         uv.u = u;
         uv.v = v;
