@@ -94,7 +94,7 @@ GLint GLSLCompiler::get_uniformLocation ( const std::string& uniformName )
     GLint location = glGetUniformLocation( _programID, uniformName.c_str() );
     if ( location == GL_INVALID_INDEX )
     {
-       fprintf( stderr, "Uniform '%s' not found!", uniformName );
+       fprintf( stderr, "Uniform '%s' not found!", uniformName.c_str() );
     }
     return location;
 }

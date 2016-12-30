@@ -1,6 +1,6 @@
 jaogll: JAOGLL/*.h JAOGLL/src/*.cpp JAOGLL/external/*
-	g++ -c JAOGLL/src/*.cpp JAOGLL/external/*.cpp -fpic -std=c++11
-	g++ --shared -o libjaogll.so *.o -lSDL2 -lGL -lGLEW -std=c++11
+	g++ -c JAOGLL/src/*.cpp JAOGLL/external/*.cpp -fpic -std=c++0x
+	g++ --shared -o libjaogll.so *.o -lSDL2 -lGL -lGLEW -std=c++0x
 
 all: jaogll test
 
