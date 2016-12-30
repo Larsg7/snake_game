@@ -1,4 +1,4 @@
-#include "../resource_manager.h"
+#include "../jaogll_resource_manager.h"
 
 Texture_Cache ResourceManager::_textureCache;
 

@@ -5,7 +5,7 @@
 
 #include "gl_texture.h"
 
-class Image_loader
+class Image_Loader
 {
 public:
     static GLTexture loadPNG ( std::string filePath );

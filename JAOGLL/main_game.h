@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <vector>
-#include "sprite.h"
+#include "jaogll_sprite.h"
 #include "jaogll_glsl_compiler.h"
 #include "gl_texture.h"
 

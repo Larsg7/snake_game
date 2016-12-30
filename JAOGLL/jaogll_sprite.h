@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 #include <string>
 
-#include "sprite.h"
+#include "jaogll_sprite.h"
 #include "gl_texture.h"
 
 class Sprite

@@ -1,10 +1,10 @@
 #include <GL/glew.h>
 #include <iostream>
 
-#include "../sprite.h"
+#include "../jaogll_sprite.h"
 #include "../jaogll_error.h"
 #include "../jaogll_vertex.h"
-#include "../resource_manager.h"
+#include "../jaogll_resource_manager.h"
 
 void Sprite::init ( float x, float y, float width, float height, std::string texture_path )
 {

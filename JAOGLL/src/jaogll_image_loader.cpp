@@ -1,9 +1,9 @@
-#include "../Image_loader.h"
+#include "../jaogll_image_loader.h"
 #include "../external/picoPNG.h"
-#include "../iomanager.h"
+#include "../jaogll_iomanager.h"
 #include "../jaogll_error.h"
 
-GLTexture Image_loader::loadPNG ( std::string filePath )
+GLTexture Image_Loader::loadPNG ( std::string filePath )
 {
     GLTexture texture = {};
 
@@ -26,14 +26,15 @@ GLTexture Image_loader::loadPNG ( std::string filePath )
 
     if ( error != 0 )
     {
-        throw Jaogll_Error ( "decodePNG failed with error '" + std::to_string( error ) + "'!"
-                , __LINE__, __FILE__ );
+        throw Error ( "decodePNG failed with error '" + std::to_string( error ) + "'!" );
     }
 
     glGenTextures( 1, &(texture.id) );
 
     glBindTexture( GL_TEXTURE_2D, texture.id );
-    glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, static_cast<int>(width), static_cast<int>(height), 0, GL_RGBA, GL_UNSIGNED_BYTE, &(out[0]) );
+
+    glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, static_cast<int>(width), static_cast<int>(height)
+            , 0, GL_RGBA, GL_UNSIGNED_BYTE, &(out[0]) );
 
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );

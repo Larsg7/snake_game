@@ -23,6 +23,9 @@ struct Vertex
         GLubyte alpha;
     } color;
 
+    /**
+     * \brief Position of the texture
+     */
     struct UV
     {
         float u;
