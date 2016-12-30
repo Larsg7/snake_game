@@ -18,4 +18,5 @@ before_install:
  - make
  - sudo make install
 script:
+    cd ../../../
     make
