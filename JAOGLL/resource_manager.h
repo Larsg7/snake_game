@@ -2,7 +2,7 @@
 #ifndef SNAKE_RESOURCEMANAGER_H
 #define SNAKE_RESOURCEMANAGER_H
 
-
+#include <string>
 #include "jaogll_texture_cache.h"
 
 class ResourceManager

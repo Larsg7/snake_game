@@ -8,4 +8,4 @@ test: main.cpp
 	g++ -o test main.cpp ./libjaogll.so
 
 clean:
-	rm *.o libjaogll.so
+	rm *.o libjaogll.so test
