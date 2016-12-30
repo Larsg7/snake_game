@@ -2,8 +2,9 @@
 #define SNAKE_SPRITE_H
 
 #include <GL/glew.h>
+#include <string>
 
-#include "../inc/sprite.h"
+#include "sprite.h"
 #include "gl_texture.h"
 
 class Sprite

@@ -1,7 +1,7 @@
-#include "../inc/Image_loader.h"
-#include "../inc/picoPNG.h"
-#include "../inc/iomanager.h"
-#include "../inc/Snake_Error.h"
+#include "../Image_loader.h"
+#include "../external/picoPNG.h"
+#include "../iomanager.h"
+#include "../jaogll_error.h"
 
 GLTexture Image_loader::loadPNG ( std::string filePath )
 {
@@ -16,7 +16,7 @@ GLTexture Image_loader::loadPNG ( std::string filePath )
     {
         IOManager::read_file_to_buffer( in, filePath );
     }
-    catch ( const Snake_Error& e )
+    catch ( const Jaogll_Error& e )
     {
         fprintf( stderr, "Error reading image '%s'\n", filePath.c_str() );
         throw e;
@@ -26,7 +26,7 @@ GLTexture Image_loader::loadPNG ( std::string filePath )
 
     if ( error != 0 )
     {
-        throw Snake_Error ( "decodePNG failed with error '" + std::to_string( error ) + "'!"
+        throw Jaogll_Error ( "decodePNG failed with error '" + std::to_string( error ) + "'!"
                 , __LINE__, __FILE__ );
     }
 

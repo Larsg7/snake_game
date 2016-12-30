@@ -4,15 +4,15 @@
 #include <SDL2/SDL.h>
 #include <vector>
 #include "sprite.h"
-#include "GLSLCompiler.h"
+#include "jaogll_glsl_compiler.h"
 #include "gl_texture.h"
 
 enum class GameState {PLAY, QUIT};
 
-class Snake
+class MainGame
 {
 public:
-    Snake ( unsigned b_width, unsigned b_height );
+    MainGame ( unsigned b_width, unsigned b_height );
 
     /**
      * \brief Game's main entry point.
@@ -34,7 +34,7 @@ public:
 
     void drawGame ();
 
-    virtual ~Snake ();
+    virtual ~MainGame ();
 
 private:
     GLuint _vaoID;
@@ -54,7 +54,9 @@ private:
 
     GLSLCompiler _colorProgram;
 
-    float _time;
+    void limitFPS ();
+
+    unsigned MAX_FPS;
 };
 
 

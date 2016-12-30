@@ -1,15 +1,15 @@
 #include <iostream>
-#include "../inc/snake_game.h"
-#include "../inc/Snake_Error.h"
+#include "JAOGLL/main_game.h"
+#include "JAOGLL/jaogll_error.h"
 
 int main ()
 {
     try
     {
-        Snake snake ( 20, 20 );
+        MainGame snake ( 20, 20 );
         snake.run();
     }
-    catch ( const Snake_Error& e )
+    catch ( const Jaogll_Error& e )
     {
         fprintf( stderr, "FATAL ERROR - on line %d in file '%s':\n%s"
                 , e.get_line(), e.get_file(), e.what() );

@@ -6,7 +6,7 @@
 #include <map>
 #include "gl_texture.h"
 
-class TextureCache
+class Texture_Cache
 {
 public:
     GLTexture get_texture ( std::string texturePath );

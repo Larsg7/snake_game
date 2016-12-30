@@ -1,28 +1,29 @@
 #include <GL/glew.h>
 #include <iostream>
+#include <numeric>
 
-#include "../inc/snake_game.h"
-#include "../inc/Snake_Error.h"
-#include "../inc/Image_loader.h"
+#include "../main_game.h"
+#include "../jaogll_error.h"
 
-Snake::Snake ( unsigned b_width, unsigned b_height )
+MainGame::MainGame ( unsigned b_width, unsigned b_height )
     : _board_width ( b_width )
       , _board_height ( b_height )
       , _window ( nullptr )
       , _game_state ( GameState::PLAY )
       , _vaoID ( 0 )
-      , _time ( 0 )
+      , MAX_FPS ( 60 )
 {
+    // for some reason errors don't work here
+
     if ( SDL_Init( SDL_INIT_EVERYTHING ) < 0 )
     {
         std::string error ( SDL_GetError() );
-        throw Snake_Error ( "Error initializing SDL: " + error
-                , __LINE__, __FILE__ );
+        throw Error ( "Error initializing SDL: " + error );
     }
 
     SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
-    SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 3 );
-    SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 2 );
+//    SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 4 );
+//    SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 2 );
     SDL_GL_SetAttribute( SDL_GL_STENCIL_SIZE, 8 );
     SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
@@ -34,8 +35,7 @@ Snake::Snake ( unsigned b_width, unsigned b_height )
 
     if ( _window == nullptr )
     {
-        throw Snake_Error ( "Could not initialize window: " + std::string( SDL_GetError() )
-                , __LINE__, __FILE__ );
+        throw Error ( "Could not initialize window: " + std::string( SDL_GetError() ) );
     }
 
     /* OpenGL initializations */
@@ -44,27 +44,30 @@ Snake::Snake ( unsigned b_width, unsigned b_height )
 
     if ( glContext == nullptr )
     {
-        throw Snake_Error ( "SDL_GLContext could not be created: " + std::string( SDL_GetError() )
-                , __LINE__, __FILE__ );
+        throw Error ( "SDL_GLContext could not be created: " + std::string( SDL_GetError() ) );
     }
 
     glewExperimental = GL_TRUE;
 
     if ( glewInit() != GLEW_OK )
     {
-        throw Snake_Error ( "Could not init glew!"
-                , __LINE__, __FILE__ );
+        throw Error ( "Could not init glew!" );
     }
 
     glGenVertexArrays( 1, &_vaoID );
     glBindVertexArray( _vaoID );
 
+    printf( "*** OpenGL Info ***\nVersion: %s\n\n", glGetString( GL_VERSION ) );
+
     glClearColor( 0, 0, 1, 1 );
+
+    // set vsync
+    SDL_GL_SetSwapInterval( 1 );
 
     initShaders();
 }
 
-void Snake::initShaders ()
+void MainGame::initShaders ()
 {
     _colorProgram.compileShaders( "../shaders/colorShading.vert", "../shaders/colorShading.frag" );
     _colorProgram.addAttribute( "vertexPosition" );
@@ -73,7 +76,7 @@ void Snake::initShaders ()
     _colorProgram.linkShaders();
 }
 
-void Snake::run ()
+void MainGame::run ()
 {
     _sprites.push_back( new Sprite() );
     _sprites.back()->init( -1, -1, 1, 1, "../media/PNG/CharacterRight_Standing.png" );
@@ -84,14 +87,13 @@ void Snake::run ()
     game_loop();
 }
 
-void Snake::game_loop ()
+void MainGame::game_loop ()
 {
     while ( _game_state == GameState::PLAY )
     {
         process_input();
-        _time += 0.001;
         drawGame();
-        //SDL_Delay( 50 );
+        limitFPS();
     }
 
     for(GLenum err; (err = glGetError()) != GL_NO_ERROR;)
@@ -100,7 +102,32 @@ void Snake::game_loop ()
     }
 }
 
-void Snake::process_input ()
+void MainGame::limitFPS ()
+{
+    static const int NUM_SAMPLES = 10;
+    static std::vector<float> frameTimes (NUM_SAMPLES);
+
+    static float previous_ticks = SDL_GetTicks();
+
+    static int frameTimes_pos = 0;
+    static int count = 1;
+
+    frameTimes[(frameTimes_pos %= NUM_SAMPLES)] = SDL_GetTicks() - previous_ticks;
+    frameTimes_pos++;
+
+    float average_frameTime = std::accumulate( frameTimes.begin(), frameTimes.end(), 0.0f )
+                              / ((count > NUM_SAMPLES) ? NUM_SAMPLES : count++);
+
+    float wait = (1000.0f / MAX_FPS) - average_frameTime;
+
+    SDL_Delay( (wait > 0) ? static_cast<unsigned>(wait) : 0 );
+
+    //std::cout << wait << std::endl;
+
+    previous_ticks = SDL_GetTicks();
+}
+
+void MainGame::process_input ()
 {
     SDL_Event event;
 
@@ -117,7 +144,7 @@ void Snake::process_input ()
     }
 }
 
-void Snake::drawGame ()
+void MainGame::drawGame ()
 {
     glClearDepth( 1.0 );
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -143,7 +170,7 @@ void Snake::drawGame ()
     SDL_GL_SwapWindow( _window );
 }
 
-Snake::~Snake ()
+MainGame::~MainGame ()
 {
     SDL_DestroyWindow( _window );
     SDL_Quit();

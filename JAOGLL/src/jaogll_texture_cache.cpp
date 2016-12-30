@@ -1,9 +1,9 @@
 
 #include <iostream>
-#include "../inc/TextureCache.h"
-#include "../inc/Image_loader.h"
+#include "../jaogll_texture_cache.h"
+#include "../Image_loader.h"
 
-GLTexture TextureCache::get_texture ( std::string texturePath )
+GLTexture Texture_Cache::get_texture ( std::string texturePath )
 {
     auto mit = _textureMap.find( texturePath );
     if ( mit == _textureMap.end() )

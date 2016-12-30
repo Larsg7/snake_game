@@ -1,5 +1,5 @@
-#include "../inc/iomanager.h"
-#include "../inc/Snake_Error.h"
+#include "../iomanager.h"
+#include "../jaogll_error.h"
 
 #include <fstream>
 
@@ -9,8 +9,7 @@ bool IOManager::read_file_to_buffer ( std::vector<unsigned char>& buffer, const 
 
     if ( file.fail() )
     {
-        throw Snake_Error ( "Could not open file '" + filePath + "'!"
-                , __LINE__, __FILE__ );
+        throw Error ( "Could not open file '" + filePath + "'!" );
     }
 
     file.seekg( 0, std::ios::end );

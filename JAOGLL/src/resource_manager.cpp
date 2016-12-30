@@ -1,6 +1,6 @@
-#include "../inc/ResourceManager.h"
+#include "../resource_manager.h"
 
-TextureCache ResourceManager::_textureCache;
+Texture_Cache ResourceManager::_textureCache;
 
 GLTexture ResourceManager::getTexture ( std::string texturePath )
 {

@@ -1,7 +1,8 @@
 #include <fstream>
 #include <vector>
-#include "../inc/GLSLCompiler.h"
-#include "../inc/Snake_Error.h"
+#include "../jaogll_glsl_compiler.h"
+#include "../jaogll_error.h"
+
 
 GLSLCompiler::GLSLCompiler ()
     : _programID ( 0 )
@@ -19,16 +20,14 @@ void GLSLCompiler::compileShaders ( const std::string& vertexShaderFilePath
 
     if ( _vertexShaderID == 0 )
     {
-        throw Snake_Error ( "Could not create vertex shader!"
-                , __LINE__, __FILE__ );
+        throw Error ( "Could not create vertex shader!" );
     }
 
     _fragmentShaderID = glCreateShader( GL_FRAGMENT_SHADER );
 
     if ( _fragmentShaderID == 0 )
     {
-        throw Snake_Error ( "Could not create fragment shader!"
-                , __LINE__, __FILE__ );
+        throw Error ( "Could not create fragment shader!" );
     }
 
     compileShader( vertexShaderFilePath, _vertexShaderID );
@@ -67,8 +66,7 @@ void GLSLCompiler::linkShaders ()
         //Use the infoLog as you see fit.
 
         //In this simple program, we'll just leave
-        throw Snake_Error ( "Linking of shaders was unsuccessful: "
-                            + std::string( &(errorLog[0]) ), __LINE__, __FILE__ );
+        throw Error ( "Linking of shaders was unsuccessful: " + std::string ( &(errorLog[0]) ) );
     }
 
     //Always detach shaders after a successful link.
@@ -134,8 +132,7 @@ void GLSLCompiler::compileShader ( const std::string& compilePath, const GLuint 
 
     if ( file.fail() )
     {
-        throw Snake_Error ( "Failed to open '" + compilePath + "'!"
-                , __LINE__, __FILE__ );
+        throw Error ( "Failed to open '" + compilePath + "'!" );
     }
 
     std::string fileContents = "";
@@ -168,7 +165,7 @@ void GLSLCompiler::compileShader ( const std::string& compilePath, const GLuint 
         // Exit with failure.
         glDeleteShader( id ); // Don't leak the shader.
 
-        throw Snake_Error ( "Compilation of shader " + compilePath + "was unsuccessful: "
-                            + std::string( &(errorLog[0]) ), __LINE__, __FILE__ );
+        throw Error ( "Compilation of shader " + compilePath + "was unsuccessful: "
+                            + std::string( &(errorLog[0]) ) );
     }
 }

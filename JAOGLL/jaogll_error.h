@@ -3,13 +3,15 @@
 
 #include <stdexcept>
 
+#define Error(m) (Jaogll_Error((m), __LINE__, __FILE__))
+
 /**
  * \brief Custom error class
  */
-class Snake_Error : public std::runtime_error
+class Jaogll_Error : public std::runtime_error
 {
 public:
-    Snake_Error ( const std::string& msg, const int line, const char* file )
+    Jaogll_Error ( const std::string& msg, const int line, const char* file )
             : runtime_error( msg ), _line ( line ), _file ( file )
     {}
 

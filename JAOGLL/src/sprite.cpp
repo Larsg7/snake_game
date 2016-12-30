@@ -1,10 +1,10 @@
 #include <GL/glew.h>
 #include <iostream>
 
-#include "../inc/sprite.h"
-#include "../inc/Snake_Error.h"
-#include "../inc/vertex.h"
-#include "../inc/ResourceManager.h"
+#include "../sprite.h"
+#include "../jaogll_error.h"
+#include "../jaogll_vertex.h"
+#include "../resource_manager.h"
 
 void Sprite::init ( float x, float y, float width, float height, std::string texture_path )
 {
@@ -23,7 +23,7 @@ void Sprite::init ( float x, float y, float width, float height, std::string tex
 
     if ( _vboID == 0 )
     {
-        throw Snake_Error ( "Could not generate buffer!"
+        throw Jaogll_Error ( "Could not generate buffer!"
                 , __LINE__, __FILE__ );
     }
 
