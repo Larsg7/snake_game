@@ -1,12 +1,12 @@
 #include <GL/glew.h>
 #include <iostream>
 
-#include "../jaogll_sprite.h"
-#include "../jaogll_error.h"
-#include "../jaogll_vertex.h"
-#include "../jaogll_resource_manager.h"
+#include "../sprite.h"
+#include "../error.h"
+#include "../vertex.h"
+#include "../resource_manager.h"
 
-void Sprite::init ( float x, float y, float width, float height, std::string texture_path )
+void JOGL::Sprite::init ( float x, float y, float width, float height, std::string texture_path )
 {
     _x = x;
     _y = y;
@@ -23,8 +23,7 @@ void Sprite::init ( float x, float y, float width, float height, std::string tex
 
     if ( _vboID == 0 )
     {
-        throw Jaogll_Error ( "Could not generate buffer!"
-                , __LINE__, __FILE__ );
+        throw JOAGLL_ERROR ( "Could not generate buffer!" );
     }
 
     // vertices for a quad
@@ -62,29 +61,24 @@ void Sprite::init ( float x, float y, float width, float height, std::string tex
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 }
 
-void Sprite::draw ( GLuint attrArray )
+void JOGL::Sprite::draw ( GLuint attrArray )
 {
     glBindTexture( GL_TEXTURE_2D, _texture.id );
 
     glBindBuffer( GL_ARRAY_BUFFER, _vboID );
 
-    glEnableVertexAttribArray( 0 );
 
-    // This is the position attribute pointer
-    glVertexAttribPointer( 0, 2, GL_FLOAT, GL_FALSE, sizeof( Vertex ), (void*)offsetof( Vertex, position ) );
-    // This is the color attribute pointer
-    glVertexAttribPointer( 1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof( Vertex ), (void*)offsetof( Vertex, color ) );
-    // This is the UV attribute pointer
-    glVertexAttribPointer( 2, 2, GL_FLOAT, GL_FALSE, sizeof( Vertex ), (void*)offsetof( Vertex, uv ) );
 
     glDrawArrays( GL_TRIANGLES, 0, 6 );
 
     glDisableVertexAttribArray( 0 );
+    glDisableVertexAttribArray( 1 );
+    glDisableVertexAttribArray( 2 );
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 }
 
-Sprite::~Sprite ()
+JOGL::Sprite::~Sprite ()
 {
     if ( _vboID != 0 )
     {

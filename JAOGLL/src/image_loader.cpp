@@ -1,11 +1,11 @@
-#include "../jaogll_image_loader.h"
+#include "../image_loader.h"
 #include "../external/picoPNG.h"
-#include "../jaogll_iomanager.h"
-#include "../jaogll_error.h"
+#include "../iomanager.h"
+#include "../error.h"
 
-GLTexture Image_Loader::loadPNG ( std::string filePath )
+JOGL::GLTexture JOGL::Image_Loader::loadPNG ( std::string filePath )
 {
-    GLTexture texture = {};
+    JOGL::GLTexture texture = {};
 
     std::vector<unsigned char> in;
     std::vector<unsigned char> out;
@@ -26,7 +26,7 @@ GLTexture Image_Loader::loadPNG ( std::string filePath )
 
     if ( error != 0 )
     {
-        throw Error ( "decodePNG failed with error '" + std::to_string( error ) + "'!" );
+        throw JOAGLL_ERROR ( "decodePNG failed with error '" + std::to_string( error ) + "'!" );
     }
 
     glGenTextures( 1, &(texture.id) );

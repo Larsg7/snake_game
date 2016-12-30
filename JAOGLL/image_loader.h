@@ -5,11 +5,13 @@
 
 #include "gl_texture.h"
 
-class Image_Loader
+namespace JOGL
 {
-public:
-    static GLTexture loadPNG ( std::string filePath );
-};
-
+    class Image_Loader
+    {
+    public:
+        static GLTexture loadPNG ( std::string filePath );
+    };
+}
 
 #endif //SNAKE_IMAGE_LOADER_H

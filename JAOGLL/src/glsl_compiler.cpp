@@ -1,10 +1,10 @@
 #include <fstream>
 #include <vector>
-#include "../jaogll_glsl_compiler.h"
-#include "../jaogll_error.h"
+#include "../glsl_compiler.h"
+#include "../error.h"
 
 
-GLSLCompiler::GLSLCompiler ()
+JOGL::GLSLCompiler::GLSLCompiler ()
     : _programID ( 0 )
       , _vertexShaderID ( 0 )
       , _fragmentShaderID ( 0 )
@@ -13,21 +13,21 @@ GLSLCompiler::GLSLCompiler ()
 
 }
 
-void GLSLCompiler::compileShaders ( const std::string& vertexShaderFilePath
+void JOGL::GLSLCompiler::compileShaders ( const std::string& vertexShaderFilePath
                                  , const std::string& fragmentShaderFilePath )
 {
     _vertexShaderID = glCreateShader( GL_VERTEX_SHADER );
 
     if ( _vertexShaderID == 0 )
     {
-        throw Error ( "Could not create vertex shader!" );
+        throw JOAGLL_ERROR ( "Could not create vertex shader!" );
     }
 
     _fragmentShaderID = glCreateShader( GL_FRAGMENT_SHADER );
 
     if ( _fragmentShaderID == 0 )
     {
-        throw Error ( "Could not create fragment shader!" );
+        throw JOAGLL_ERROR ( "Could not create fragment shader!" );
     }
 
     compileShader( vertexShaderFilePath, _vertexShaderID );
@@ -36,7 +36,7 @@ void GLSLCompiler::compileShaders ( const std::string& vertexShaderFilePath
     printf( "LOG: Shaders were compiled successfully.\n" );
 }
 
-void GLSLCompiler::linkShaders ()
+void JOGL::GLSLCompiler::linkShaders ()
 {
     //Attach our shaders to our program
     glAttachShader( _programID, _vertexShaderID );
@@ -66,7 +66,7 @@ void GLSLCompiler::linkShaders ()
         //Use the infoLog as you see fit.
 
         //In this simple program, we'll just leave
-        throw Error ( "Linking of shaders was unsuccessful: " + std::string ( &(errorLog[0]) ) );
+        throw JOAGLL_ERROR ( "Linking of shaders was unsuccessful: " + std::string ( &(errorLog[0]) ) );
     }
 
     //Always detach shaders after a successful link.
@@ -78,18 +78,18 @@ void GLSLCompiler::linkShaders ()
     printf( "LOG: Shaders were linked successfully.\n" );
 }
 
-void GLSLCompiler::addAttribute ( const std::string& attributeName )
+void JOGL::GLSLCompiler::addAttribute ( const std::string& attributeName )
 {
     //glBindFragDataLocation( _programID, _numAttributes++, attributeName.c_str() );
     glBindAttribLocation( _programID, _numAttributes++, attributeName.c_str() );
 }
 
-GLint GLSLCompiler::get_attrLocation ( const std::string& attributeName ) const
+GLint JOGL::GLSLCompiler::get_attrLocation ( const std::string& attributeName ) const
 {
     return glGetAttribLocation( _programID, attributeName.c_str() );
 }
 
-GLint GLSLCompiler::get_uniformLocation ( const std::string& uniformName )
+GLint JOGL::GLSLCompiler::get_uniformLocation ( const std::string& uniformName )
 {
     GLint location = glGetUniformLocation( _programID, uniformName.c_str() );
     if ( location == GL_INVALID_INDEX )
@@ -99,7 +99,7 @@ GLint GLSLCompiler::get_uniformLocation ( const std::string& uniformName )
     return location;
 }
 
-void GLSLCompiler::use ()
+void JOGL::GLSLCompiler::use ()
 {
     glUseProgram( _programID );
     for ( GLuint i = 0; i < _numAttributes; ++i )
@@ -108,7 +108,7 @@ void GLSLCompiler::use ()
     }
 }
 
-void GLSLCompiler::unuse ()
+void JOGL::GLSLCompiler::unuse ()
 {
     glUseProgram( 0 );
     for ( GLuint i = 0; i < _numAttributes; ++i )
@@ -117,12 +117,12 @@ void GLSLCompiler::unuse ()
     }
 }
 
-GLSLCompiler::~GLSLCompiler ()
+JOGL::GLSLCompiler::~GLSLCompiler ()
 {
     glDeleteProgram( _programID );
 }
 
-void GLSLCompiler::compileShader ( const std::string& compilePath, const GLuint id )
+void JOGL::GLSLCompiler::compileShader ( const std::string& compilePath, const GLuint id )
 {
     //Now time to link them together into a program.
     //Get a program object.
@@ -132,7 +132,7 @@ void GLSLCompiler::compileShader ( const std::string& compilePath, const GLuint 
 
     if ( file.fail() )
     {
-        throw Error ( "Failed to open '" + compilePath + "'!" );
+        throw JOAGLL_ERROR ( "Failed to open '" + compilePath + "'!" );
     }
 
     std::string fileContents = "";
@@ -165,7 +165,7 @@ void GLSLCompiler::compileShader ( const std::string& compilePath, const GLuint 
         // Exit with failure.
         glDeleteShader( id ); // Don't leak the shader.
 
-        throw Error ( "Compilation of shader " + compilePath + "was unsuccessful: "
+        throw JOAGLL_ERROR ( "Compilation of shader " + compilePath + "was unsuccessful: "
                             + std::string( &(errorLog[0]) ) );
     }
 }

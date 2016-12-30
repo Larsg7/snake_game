@@ -3,11 +3,14 @@
 
 #include <GL/glew.h>
 
-struct GLTexture
+namespace JOGL
 {
-    GLuint id;
-    int width;
-    int height;
-};
+    struct GLTexture
+    {
+        GLuint id;
+        int width;
+        int height;
+    };
+}
 
 #endif //SNAKE_GL_TEXTURE_H

@@ -1,15 +1,15 @@
-#include "../jaogll_iomanager.h"
-#include "../jaogll_error.h"
+#include "../iomanager.h"
+#include "../error.h"
 
 #include <fstream>
 
-bool IOManager::read_file_to_buffer ( std::vector<unsigned char>& buffer, const std::string filePath )
+bool JOGL::IOManager::read_file_to_buffer ( std::vector<unsigned char>& buffer, const std::string filePath )
 {
     std::fstream file ( filePath, std::ios::binary | std::ios::in );
 
     if ( file.fail() )
     {
-        throw Error ( "Could not open file '" + filePath + "'!" );
+        throw JOAGLL_ERROR ( "Could not open file '" + filePath + "'!" );
     }
 
     file.seekg( 0, std::ios::end );

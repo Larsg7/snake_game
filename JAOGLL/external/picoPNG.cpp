@@ -510,7 +510,7 @@ int decodePNG(std::vector<unsigned char>& out_image, unsigned long& image_width,
             else if(infoIn.bitDepth < 8 && infoIn.colorType == 0) //greyscale
                 for(size_t i = 0; i < numpixels; i++)
                 {
-                    unsigned long value = (readBitsFromReversedStream(bp, in, infoIn.bitDepth) * 255) / ((1 << infoIn.bitDepth) - 1); //scale value from 0 to 255
+                    unsigned long value = (readBitsFromReversedStream(bp, in, infoIn.bitDepth) * 255) / ((1 << infoIn.bitDepth) - 1); //_scale value from 0 to 255
                     out_[4 * i + 0] = out_[4 * i + 1] = out_[4 * i + 2] = (unsigned char)(value);
                     out_[4 * i + 3] = (infoIn.key_defined && value && ((1U << infoIn.bitDepth) - 1U) == infoIn.key_r && ((1U << infoIn.bitDepth) - 1U)) ? 0 : 255;
                 }

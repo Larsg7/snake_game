@@ -1,7 +1,6 @@
 language: cpp
 compiler:
  - gcc
- - clang
 before_install:
  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
  - sudo apt-get update -q
@@ -9,6 +8,7 @@ before_install:
  - sudo apt-get build-dep -y libsdl1.2-dev
  - sudo apt-get install -y mercurial
  - sudo apt-get install -y libglew-dev
+ - sudo apt-get install -y libglm-dev
  # install sdl2 form source
  - mkdir sdl_lib && cd sdl_lib
  - hg clone https://hg.libsdl.org/SDL
@@ -19,4 +19,4 @@ before_install:
  - sudo make install
  - cd ../../../
 script:
- - make
+ - make all
