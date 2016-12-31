@@ -1,0 +1,31 @@
+#include <iostream>
+#include <jaogll/error.h>
+#include <jaogll/logger.h>
+
+#include "zombie_game/inc/main_game.h"
+
+JOGL::LogLevel JOGL::Logger::current_log_level = JOGL::LogLevel::LOG_DEBUG;
+
+int main ()
+{
+    try
+    {
+        MainGame zombie ( 1080, 720 );
+
+        zombie.run();
+    }
+    catch ( const JOGL::Jaogll_Error& e )
+    {
+        fprintf( stderr, "FATAL ERROR - on line %d in file '%s':\n%s"
+                , e.get_line(), e.get_file(), e.what() );
+        return 1;
+    }
+    catch ( ... )
+    {
+        fprintf( stderr, "There was an unknown error!" );
+        return 1;
+    }
+
+    return 0;
+
+}

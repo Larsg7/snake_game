@@ -2,11 +2,12 @@
 #include <iostream>
 #include <numeric>
 
-#include "main_game.h"
-#include "JAOGLL/error.h"
-#include "JAOGLL/jaogll.h"
-#include "JAOGLL/resource_manager.h"
-#include "JAOGLL/logger.h"
+#include "zombie_game/inc/main_game.h"
+#include <jaogll/error.h>
+#include <jaogll/jaogll.h>
+#include <jaogll/resource_manager.h>
+#include <jaogll/logger.h>
+#include <jaogll/sprite.h>
 #include <glm/glm.hpp>
 
 
@@ -18,7 +19,7 @@ MainGame::MainGame ( unsigned w_width, unsigned w_height )
 {
     JOGL::init();
 
-    _window.create( "Game Engine", _w_width, _w_height, 0 );
+    _window.create( "Zombie 0.1", _w_width, _w_height, 0 );
 
     initShaders();
 
@@ -27,6 +28,8 @@ MainGame::MainGame ( unsigned w_width, unsigned w_height )
     _spriteBatch.init();
 
     _fpsLimiter.init( MAX_FPS );
+
+    _level.init();
 }
 
 void MainGame::initShaders ()
@@ -132,7 +135,6 @@ int MainGame::process_input ()
     {
         glm::vec2 mouseCoords = _inputManager.get_mouse_coords();
         mouseCoords = _camera.convert_screen_to_world( mouseCoords );
-        JOGL::Logger::log( std::to_string( mouseCoords.x ) + " : " + std::to_string( mouseCoords.y ), JOGL::LogLevel::LOG_DEBUG );
     }
 
     return 0;
@@ -154,17 +156,10 @@ void MainGame::drawGame ()
 
     _spriteBatch.begin();
 
-    glm::vec4 pos ( 0.0f, 0.0f, 50.0f, 50.0f );
-    glm::vec4 uv ( 0.0f, 0.0f ,1.0f, 1.0f );
-    static JOGL::GLTexture texture = JOGL::ResourceManager::getTexture( "../media/PNG/CharacterRight_Standing.png" );
-    JOGL::Color color;
-    color.red = 255;
-    color.alpha = 255;
-    color.blue = 255;
-    color.green = 255;
-    for ( int i = 0; i < 1; ++i )
+    //JOGL::Sprite s ( 0, 0, 50, 50, JOGL::Color ( 255,255,255,255 ), "../media/PNG/CharacterRight_Standing.png" );
+    for ( auto& s : _level.getSprites() )
     {
-        _spriteBatch.add_sprite( pos + glm::vec4( 0, 0, 0, 0 ), uv, texture.id, color, 0.0f );
+        _spriteBatch.add_sprite( s.pos, s.uv, s.texture.id, s.color, 1 );
     }
 
     _spriteBatch.end();

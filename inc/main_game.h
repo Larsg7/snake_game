@@ -3,14 +3,14 @@
 
 #include <SDL2/SDL.h>
 #include <vector>
-#include "JAOGLL/sprite.h"
-#include "JAOGLL/glsl_compiler.h"
-#include "JAOGLL/gl_texture.h"
-#include "JAOGLL/window.h"
-#include "JAOGLL/camera2D.h"
-#include "JAOGLL/sprite_batch.h"
-#include "JAOGLL/input_manager.h"
-#include "JAOGLL/timing.h"
+#include <jaogll/glsl_compiler.h>
+#include <jaogll/gl_texture.h>
+#include <jaogll/window.h>
+#include <jaogll/camera2D.h>
+#include <jaogll/sprite_batch.h>
+#include <jaogll/input_manager.h>
+#include <jaogll/timing.h>
+#include "level.h"
 
 enum class GameState {PLAY, QUIT};
 
@@ -39,6 +39,8 @@ public:
 
     void drawGame ();
 
+    void add_sprite (  );
+
     virtual ~MainGame ();
 
 private:
@@ -48,7 +50,7 @@ private:
     /** Current game state */
     GameState _gameState;
 
-    /** Board dimensions */
+    /** Screen dimensions */
     const unsigned _w_width;
     const unsigned _w_height;
 
@@ -61,6 +63,8 @@ private:
     JOGL::Input_Manager _inputManager;
 
     JOGL::GLSLCompiler* _colorProgram;
+
+    Level _level;
 
     unsigned MAX_FPS;
 };
