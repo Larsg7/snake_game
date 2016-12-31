@@ -1,15 +1,14 @@
-//
-// Created by lars on 12/30/16.
-//
-
 #ifndef SNAKE_INPUT_MANAGER_H
 #define SNAKE_INPUT_MANAGER_H
 
 #include <unordered_map>
-#include <glm/vec2.hpp>
+#include <glm/glm.hpp>
 
 namespace JOGL
 {
+    /**
+     * \brief Class to keep track of which key is pressed and where the mouse is.
+     */
     class Input_Manager
     {
     public:

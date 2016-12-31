@@ -59,9 +59,20 @@ namespace JOGL
 
         virtual ~Sprite_Batch ();
 
+        /**
+         * \brief Calls createVertexArray.
+         */
         void init ();
 
+        /**
+         * \brief Clears the vectors and sets sort type.
+         * \param sortType
+         */
         void begin ( GlyphSortType sortType = GlyphSortType::TEXTURE );
+
+        /**
+         * \brief Sorts _glyphs and calls createRenderBatches.
+         */
         void end ();
 
         /**
@@ -73,9 +84,12 @@ namespace JOGL
          * \param color    Color of the sprite.
          * \param depth    Depth of the sprite.
          */
-        void draw ( const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, const Color& color
-                  , float depth );
+        void add_sprite ( const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, const Color& color,
+                          float depth );
 
+        /**
+         * \brief Binds _vao and draws Render_Batches.
+         */
         void render_batch ();
 
     private:

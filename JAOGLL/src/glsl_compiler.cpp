@@ -2,6 +2,7 @@
 #include <vector>
 #include "../glsl_compiler.h"
 #include "../error.h"
+#include "../logger.h"
 
 
 JOGL::GLSLCompiler::GLSLCompiler ()
@@ -33,7 +34,7 @@ void JOGL::GLSLCompiler::compileShaders ( const std::string& vertexShaderFilePat
     compileShader( vertexShaderFilePath, _vertexShaderID );
     compileShader( fragmentShaderFilePath, _fragmentShaderID );
 
-    printf( "LOG: Shaders were compiled successfully.\n" );
+    JOGL::Logger::log( "Shaders were compiled successfully.", LogLevel::LOG_INFO );
 }
 
 void JOGL::GLSLCompiler::linkShaders ()
@@ -75,7 +76,7 @@ void JOGL::GLSLCompiler::linkShaders ()
     glDeleteShader( _vertexShaderID );
     glDeleteShader( _fragmentShaderID );
 
-    printf( "LOG: Shaders were linked successfully.\n" );
+    JOGL::Logger::log( "Shaders were linked successfully.", LogLevel::LOG_INFO );
 }
 
 void JOGL::GLSLCompiler::addAttribute ( const std::string& attributeName )

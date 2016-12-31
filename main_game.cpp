@@ -6,6 +6,7 @@
 #include "JAOGLL/error.h"
 #include "JAOGLL/jaogll.h"
 #include "JAOGLL/resource_manager.h"
+#include "JAOGLL/logger.h"
 #include <glm/glm.hpp>
 
 
@@ -30,11 +31,12 @@ MainGame::MainGame ( unsigned w_width, unsigned w_height )
 
 void MainGame::initShaders ()
 {
-    _colorProgram.compileShaders( "../shaders/colorShading.vert", "../shaders/colorShading.frag" );
-    _colorProgram.addAttribute( "vertexPosition" );
-    _colorProgram.addAttribute( "vertexColor" );
-    _colorProgram.addAttribute( "vertexUV" );
-    _colorProgram.linkShaders();
+    _colorProgram = new JOGL::GLSLCompiler;
+    _colorProgram->compileShaders( "../shaders/colorShading.vert", "../shaders/colorShading.frag" );
+    _colorProgram->addAttribute( "vertexPosition" );
+    _colorProgram->addAttribute( "vertexColor" );
+    _colorProgram->addAttribute( "vertexUV" );
+    _colorProgram->linkShaders();
 }
 
 void MainGame::run ()
@@ -130,31 +132,23 @@ int MainGame::process_input ()
     {
         glm::vec2 mouseCoords = _inputManager.get_mouse_coords();
         mouseCoords = _camera.convert_screen_to_world( mouseCoords );
-        printf( "%f : %f\n", mouseCoords.x, mouseCoords.y );
+        JOGL::Logger::log( std::to_string( mouseCoords.x ) + " : " + std::to_string( mouseCoords.y ), JOGL::LogLevel::LOG_DEBUG );
     }
 
     return 0;
 }
 
-void MainGame::add_sprite ( JOGL::Sprite* sprite )
-{
-
-}
-
 void MainGame::drawGame ()
 {
-    glClearDepth( 1.0 );
-    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-
-    _colorProgram.use();
+    _colorProgram->use();
 
     // set texture
     glActiveTexture( GL_TEXTURE0 );
-    GLint textureLocation = _colorProgram.get_uniformLocation( "mySampler" );
+    GLint textureLocation = _colorProgram->get_uniformLocation( "mySampler" );
     glUniform1i( textureLocation, 0 );
 
     // set camera matrix
-    GLint pLocation = _colorProgram.get_uniformLocation( "P" );
+    GLint pLocation = _colorProgram->get_uniformLocation( "P" );
     glm::mat4 cameraMatrix = _camera.getCameraMatrix();
     glUniformMatrix4fv( pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]) );
 
@@ -170,16 +164,14 @@ void MainGame::drawGame ()
     color.green = 255;
     for ( int i = 0; i < 1; ++i )
     {
-        _spriteBatch.draw( pos + glm::vec4(0,0,0,0), uv, texture.id, color, 0.0f );
+        _spriteBatch.add_sprite( pos + glm::vec4( 0, 0, 0, 0 ), uv, texture.id, color, 0.0f );
     }
 
     _spriteBatch.end();
 
     _spriteBatch.render_batch();
 
-    glBindTexture( GL_TEXTURE_2D, 0 );
-
-    _colorProgram.unuse();
+    _colorProgram->unuse();
 
     _window.swap();
 }

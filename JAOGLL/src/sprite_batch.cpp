@@ -1,6 +1,3 @@
-//
-// Created by lars on 12/30/16.
-//
 
 #include <algorithm>
 #include "../sprite_batch.h"
@@ -54,8 +51,8 @@ void JOGL::Sprite_Batch::end ()
     createRenderBatches();
 }
 
-void JOGL::Sprite_Batch::draw ( const glm::vec4& destRect, const glm::vec4& uvRect
-                              , GLuint texture, const Color& color, float depth )
+void JOGL::Sprite_Batch::add_sprite ( const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture,
+                                      const Color& color, float depth )
 {
     /*  -destRect.z->
      * TL----------TR  ^

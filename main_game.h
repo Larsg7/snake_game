@@ -41,8 +41,6 @@ public:
 
     virtual ~MainGame ();
 
-    void add_sprite ( JOGL::Sprite* sprite );
-
 private:
     /** Main game window */
     JOGL::Window _window;
@@ -62,7 +60,7 @@ private:
 
     JOGL::Input_Manager _inputManager;
 
-    JOGL::GLSLCompiler _colorProgram;
+    JOGL::GLSLCompiler* _colorProgram;
 
     unsigned MAX_FPS;
 };

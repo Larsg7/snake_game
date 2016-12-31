@@ -6,8 +6,18 @@
 
 namespace JOGL
 {
+    /**
+     * \brief Struct holding information about a specific color.
+     */
     struct Color
     {
+        Color ()
+        {}
+
+        Color ( GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha )
+                : red( red ), green( green ), blue( blue ), alpha( alpha )
+        {}
+
         GLubyte red;
         GLubyte green;
         GLubyte blue;
@@ -16,6 +26,13 @@ namespace JOGL
 
     struct Position
     {
+        Position ()
+        {}
+
+        Position ( float x, float y )
+                : x( x ), y( y )
+        {}
+
         float x;
         float y;
     };
@@ -25,6 +42,13 @@ namespace JOGL
      */
     struct UV
     {
+        UV ()
+        {}
+
+        UV ( float u, float v )
+                : u( u ), v( v )
+        {}
+
         float u;
         float v;
     };
@@ -35,6 +59,13 @@ namespace JOGL
      */
     struct Vertex
     {
+        Vertex ()
+        {}
+
+        Vertex ( const Position& position, const Color& color, const UV& uv )
+                : position( position ), color( color ), uv( uv )
+        {}
+
         Position position;
 
         Color color;

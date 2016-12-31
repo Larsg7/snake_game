@@ -3,6 +3,7 @@
 #include "../window.h"
 #include "../window.h"
 #include "../error.h"
+#include "../logger.h"
 
 int JOGL::Window::create ( std::string title, int width, int height, unsigned int flags )
 {
@@ -11,6 +12,7 @@ int JOGL::Window::create ( std::string title, int width, int height, unsigned in
 
     Uint32 window_flags = SDL_WINDOW_OPENGL;
 
+    // set custom window flags
     if ( flags & INVISIBLE )
     {
         window_flags |= SDL_WINDOW_HIDDEN;
@@ -32,7 +34,7 @@ int JOGL::Window::create ( std::string title, int width, int height, unsigned in
 
     if ( _sdlWindow == nullptr )
     {
-        throw JOAGLL_ERROR ( "Could not initialize window: " + std::string( SDL_GetError() ) );
+        throw JOAGLL_ERROR ( "Could not initialize SDL_Window: " + std::string( SDL_GetError() ) );
     }
 
     /* OpenGL initializations */
@@ -48,22 +50,22 @@ int JOGL::Window::create ( std::string title, int width, int height, unsigned in
 
     if ( glewInit() != GLEW_OK )
     {
-        throw JOAGLL_ERROR ( "Could not init glew!" );
+        throw JOAGLL_ERROR ( "Could not initialize glew!" );
     }
 
     printf( "*** OpenGL Info ***\nVersion: %s\n\n", glGetString( GL_VERSION ) );
 
-    glGenVertexArrays( 1, &_vaoID );
-    glBindVertexArray( _vaoID );
-
-    glClearColor( 0, 0, 1, 1 );
+    // set default (white)
+    glClearColor( 1, 1, 1, 1 );
 
     // set vsync
-    SDL_GL_SetSwapInterval( 0 );
+    SDL_GL_SetSwapInterval( 1 );
 
     // enable alpha blending
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+
+    JOGL::Logger::log( "Window created!", LogLevel::LOG_INFO );
 
     return 0;
 }
@@ -71,6 +73,10 @@ int JOGL::Window::create ( std::string title, int width, int height, unsigned in
 void JOGL::Window::swap ()
 {
     SDL_GL_SwapWindow( _sdlWindow );
+
+    // clear window
+    glClearDepth( 1.0 );
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 }
 
 int JOGL::Window::get_width () const
@@ -81,6 +87,14 @@ int JOGL::Window::get_width () const
 int JOGL::Window::get_height () const
 {
     return _height;
+}
+
+void JOGL::Window::set_clear_color ( const Color& color ) const
+{
+    glClearColor( color.red   / 255.0f
+                , color.green / 255.0f
+                , color.blue  / 255.0f
+                , color.alpha / 255.0f );
 }
 
 JOGL::Window::~Window ()

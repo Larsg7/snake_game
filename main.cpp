@@ -1,6 +1,9 @@
 #include <iostream>
 #include "main_game.h"
 #include "JAOGLL/error.h"
+#include "JAOGLL/logger.h"
+
+JOGL::LogLevel JOGL::Logger::current_log_level = JOGL::LogLevel::LOG_DEBUG;
 
 int main ()
 {
