@@ -11,6 +11,12 @@ namespace JOGL
     class ResourceManager
     {
     public:
+        /**
+         * \brief Returns a texture if inside the texture cache or creates a new one.
+         * Actually just a wrapper for Texture_Cache::getTexture.
+         * \param texturePath Path to the image file.
+         * \return GLTexture
+         */
         static GLTexture getTexture ( std::string texturePath );
 
     private:

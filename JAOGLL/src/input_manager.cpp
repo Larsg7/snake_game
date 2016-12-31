@@ -1,5 +1,5 @@
 
-#include "input_manager.h"
+#include "../input_manager.h"
 
 JOGL::Input_Manager::Input_Manager ()
         : _mouseCoords( 0, 0 )

@@ -7,9 +7,10 @@ namespace JOGL
 {
 #define JOAGLL_ERROR( m ) (JOGL::Jaogll_Error((m), __LINE__, __FILE__))
 
-/**
- * \brief Custom error class
- */
+    /**
+     * \brief Custom error class.
+     * Reports line number and file.
+     */
     class Jaogll_Error : public std::runtime_error
     {
     public:

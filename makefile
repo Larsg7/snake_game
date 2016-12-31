@@ -4,8 +4,8 @@ jaogll: JAOGLL/*.h JAOGLL/src/*.cpp JAOGLL/external/*
 
 all: jaogll test
 
-test: main.cpp
-	g++ -o test main.cpp ./libjaogll.so
+test: main.cpp main_game.cpp main_game.h
+	g++ -o test main.cpp main_game.cpp main_game.h ./libjaogll.so
 
 clean:
 	rm *.o libjaogll.so test JAOGLL/*.gch JAOGLL/external/*.gch

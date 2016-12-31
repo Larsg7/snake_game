@@ -13,6 +13,9 @@
 
 namespace JOGL
 {
+    /**
+     * \brief Different sorting types for the textures in render_batch.
+     */
     enum class GlyphSortType
     {
         NONE,
@@ -21,6 +24,9 @@ namespace JOGL
         TEXTURE
     };
 
+    /**
+     * \brief Struct holding information about a texture.
+     */
     struct Glyph
     {
         GLuint texture;
@@ -34,9 +40,11 @@ namespace JOGL
 
     typedef std::shared_ptr<Glyph> glyph_ptr;
 
-    class Render_Batch
+    /**
+     * \brief Struct holding information about a render batch.
+     */
+    struct Render_Batch
     {
-    public:
         Render_Batch ( GLuint offset, GLuint numVertices, GLuint texture );
 
         GLuint offset;

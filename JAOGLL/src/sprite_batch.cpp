@@ -3,7 +3,7 @@
 //
 
 #include <algorithm>
-#include "sprite_batch.h"
+#include "../sprite_batch.h"
 
 JOGL::Render_Batch::Render_Batch ( GLuint offset, GLuint numVertices, GLuint texture )
         : offset ( offset ), numVertices ( numVertices ), texture ( texture )

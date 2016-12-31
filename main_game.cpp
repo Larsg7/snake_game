@@ -19,8 +19,6 @@ MainGame::MainGame ( unsigned w_width, unsigned w_height )
 
     _window.create( "Game Engine", _w_width, _w_height, 0 );
 
-    printf( "*** OpenGL Info ***\nVersion: %s\n\n", glGetString( GL_VERSION ) );
-
     initShaders();
 
     _camera.init( w_width, w_height );

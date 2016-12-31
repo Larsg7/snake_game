@@ -5,12 +5,16 @@
 
 namespace JOGL
 {
+    /**
+     * \brief 2D camera class.
+     * Used to move the camera and translate to screen/world coords.
+     */
     class Camera2D
     {
     public:
         Camera2D ();
 
-        void init ( int screen_width, int screen_heigt );
+        void init ( int screen_width, int screen_height );
 
         void update ();
 

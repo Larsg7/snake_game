@@ -3,9 +3,11 @@
 
 namespace JOGL
 {
+    /**
+     * \brief Initializes SDL.
+     * \return Return code.
+     */
     int init();
-
-    void limitFPS ( int maxFps );
 }
 
 #endif //SNAKE_JAPGLL_H_H

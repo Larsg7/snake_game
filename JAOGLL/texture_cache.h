@@ -12,6 +12,12 @@ namespace JOGL
     class Texture_Cache
     {
     public:
+        /**
+         * \brief Returns a GLTexture if one corresponding to the path is found in _textureMap
+         *        or creates a new one and stores it in _textureMap.
+         * \param texturePath Path to the image.
+         * \return GLTexture
+         */
         GLTexture get_texture ( std::string texturePath );
 
     private:

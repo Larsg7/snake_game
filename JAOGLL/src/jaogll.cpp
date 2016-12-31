@@ -20,8 +20,3 @@ int JOGL::init ()
 
     return 0;
 }
-
-void JOGL::limitFPS ( int maxFps )
-{
-
-}

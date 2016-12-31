@@ -13,10 +13,10 @@ JOGL::Camera2D::Camera2D ()
 {
 }
 
-void JOGL::Camera2D::init ( int screen_width, int screen_heigt )
+void JOGL::Camera2D::init ( int screen_width, int screen_height )
 {
     _screen_width = screen_width;
-    _screen_height = screen_heigt;
+    _screen_height = screen_height;
     _orthoMatrix = glm::ortho( 0.0f, (float)_screen_width, 0.0f, (float)_screen_height );
 }
 

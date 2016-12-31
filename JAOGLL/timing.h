@@ -3,6 +3,7 @@
 
 namespace JOGL
 {
+    // TODO: Limiting does not work!
     class Fps_Limiter
     {
     public:
@@ -15,10 +16,6 @@ namespace JOGL
 
         void set_targetFPS ( unsigned int targetFPS );
 
-        /**
-         * \brief
-         * \return Number of FPS.
-         */
         void limit ();
 
     private:
