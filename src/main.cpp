@@ -10,7 +10,7 @@ int main ()
 {
     try
     {
-        MainGame zombie ( 1080, 720 );
+        MainGame zombie ( 1200, 920 );
 
         zombie.run();
     }

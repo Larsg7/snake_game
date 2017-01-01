@@ -21,6 +21,8 @@ MainGame::MainGame ( unsigned w_width, unsigned w_height )
 
     _window.create( "Zombie 0.1", _w_width, _w_height, 0 );
 
+    _window.set_clear_color( JOGL::Color ( 200, 200, 200, 255 ) );
+
     initShaders();
 
     _camera.init( w_width, w_height );
@@ -29,7 +31,10 @@ MainGame::MainGame ( unsigned w_width, unsigned w_height )
 
     _fpsLimiter.init( MAX_FPS );
 
-    _level.init();
+    _level.init( "../resources/level_file.dat", 50 );
+    _level.add_character_image( 'W', "../media/bricksx64.png" );
+    _level.add_character_image( '.', "../media/Green_3_gridbox.png" );
+    _level.generate_level();
 }
 
 void MainGame::initShaders ()
@@ -155,8 +160,7 @@ void MainGame::drawGame ()
     glUniformMatrix4fv( pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]) );
 
     _spriteBatch.begin();
-
-    //JOGL::Sprite s ( 0, 0, 50, 50, JOGL::Color ( 255,255,255,255 ), "../media/PNG/CharacterRight_Standing.png" );
+    
     for ( auto& s : _level.getSprites() )
     {
         _spriteBatch.add_sprite( s.pos, s.uv, s.texture.id, s.color, 1 );

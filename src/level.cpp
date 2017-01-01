@@ -1,32 +1,40 @@
 #include "zombie_game/inc/level.h"
-#include <jaogll/sprite.h>
+#include <jaogll/iomanager.h>
+#include <jaogll/logger.h>
 
-void Level::init ()
+void Level::init ( std::string level_file, unsigned int spriteSize, JOGL::Color color )
 {
-    const int spriteSize = 50;
+    _spriteSize = spriteSize;
+    _color = color;
 
-    const std::string image_wall = "../media/bricksx64.png";
-    const std::string image_floor = "../media/Green_3_gridbox.png";
-    const JOGL::Color color ( 255, 255, 255, 255 );
-
-    const int level_width = 20;
-    const int level_height = 20;
-
-    for ( int i = - level_height / 2; i < level_height / 2; ++i )
-    {
-        for ( int j = - level_width / 2; j < level_width / 2; ++j )
-        {
-            _sprites.emplace_back( i * spriteSize, j * spriteSize, spriteSize, spriteSize, color, image_floor );
-        }
-    }
-
-    for ( float k = -1 * (level_width / 2 + 1); k < level_width / 2 + 1; ++k )
-    {
-        _sprites.emplace_back( k * spriteSize, 0, spriteSize, spriteSize, color, image_wall );
-    }
+    JOGL::IOManager::read_file_to_buffer_line( _level, level_file );
 }
 
-const std::vector<JOGL::Sprite>& Level::getSprites () const
+std::vector<JOGL::Sprite>& Level::getSprites ()
 {
     return _sprites;
+}
+
+void Level::add_character_image ( char c, std::string filePath )
+{
+    _assets.insert( std::make_pair( c, filePath ) );
+}
+
+void Level::generate_level ()
+{
+    for ( int i = 0; i < _level.size(); ++i )
+    {
+        for ( int j = 0; j < _level[i].size(); ++j )
+        {
+            auto mit = _assets.find( _level[i][j] );
+            if ( mit != _assets.end() )
+            {
+                _sprites.emplace_back( j * _spriteSize, i * _spriteSize, _spriteSize, _spriteSize, _color, mit->second );
+            }
+            else
+            {
+                JOGL::Logger::log( "Undefined character " + std::string (1, _level[i][j] ) + " in level file!", JOGL::LogLevel::LOG_ERROR );
+            }
+        }
+    }
 }
