@@ -1,21 +1,19 @@
 #include <GL/glew.h>
 #include <iostream>
-#include <numeric>
+#include <jaogll/jaogll.h>
 
 #include "zombie_game/inc/main_game.h"
-#include <jaogll/error.h>
-#include <jaogll/jaogll.h>
-#include <jaogll/resource_manager.h>
-#include <jaogll/logger.h>
-#include <jaogll/sprite.h>
-#include <glm/glm.hpp>
 
+float Bullet::maxLiveTime = 100;
+
+const JOGL::Color white ( 255, 255, 255, 255 );
 
 MainGame::MainGame ( unsigned w_width, unsigned w_height )
     : _w_width ( w_width )
       , _w_height ( w_height )
       , MAX_FPS ( 60 )
       , _gameState ( GameState::PLAY )
+      ,  _player_start ( 200, 200 )
 {
     JOGL::init();
 
@@ -35,6 +33,20 @@ MainGame::MainGame ( unsigned w_width, unsigned w_height )
     _level.add_character_image( 'W', "../media/bricksx64.png" );
     _level.add_character_image( '.', "../media/Green_3_gridbox.png" );
     _level.generate_level();
+
+    init_agents();
+
+    _camera.setPosition( _player_start );
+}
+
+void MainGame::init_agents ()
+{
+    Bullet bullet_sample;
+    bullet_sample.init( 20, JOGL::Sprite ( 0, 0, 5, 5, white, "../media/PNG/Coin.png", 0 ) );
+    _player.init( 5
+                 , JOGL::Sprite ( _player_start.x, _player_start.y, 40, 40, white
+                    , "../media/PNG/CharacterRight_Standing.png", 0 )
+                 , bullet_sample );
 }
 
 void MainGame::initShaders ()
@@ -60,6 +72,7 @@ void MainGame::game_loop ()
         process_input();
 
         _camera.update();
+        _player.update();
 
         drawGame();
         _fpsLimiter.limit();
@@ -114,19 +127,26 @@ int MainGame::process_input ()
 
     if ( _inputManager.is_key_presses( SDLK_w ) )
     {
-        _camera.setPosition( _camera.getPosition() + glm::vec2( 0.0, CAMERA_SPEED ) );
+        _player.set_vel_unit( glm::normalize( _player.get_vel_unit() + glm::vec2 ( 0, 1 ) ) );
     }
     if ( _inputManager.is_key_presses( SDLK_s ) )
     {
-        _camera.setPosition( _camera.getPosition() + glm::vec2 ( 0.0, -CAMERA_SPEED ) );
+        _player.set_vel_unit( glm::normalize( _player.get_vel_unit() + glm::vec2 ( 0, -1 ) ) );
     }
     if ( _inputManager.is_key_presses( SDLK_a ) )
     {
-        _camera.setPosition( _camera.getPosition() + glm::vec2 ( -CAMERA_SPEED, 0.0 ) );
+        _player.set_vel_unit( glm::normalize( _player.get_vel_unit() + glm::vec2 ( -1, 0 ) ) );
     }
     if ( _inputManager.is_key_presses( SDLK_d ) )
     {
-        _camera.setPosition( _camera.getPosition() + glm::vec2 ( CAMERA_SPEED, 0.0 ) );
+        _player.set_vel_unit( glm::normalize( _player.get_vel_unit() + glm::vec2 ( 1, 0 ) ) );
+    }
+    if ( ! _inputManager.is_key_presses( SDLK_w )
+      && ! _inputManager.is_key_presses( SDLK_s )
+      && ! _inputManager.is_key_presses( SDLK_a )
+      && ! _inputManager.is_key_presses( SDLK_d ) )
+    {
+        _player.set_vel_unit( glm::vec2 ( 0, 0 ) );
     }
     if ( _inputManager.is_key_presses( SDLK_q ) )
     {
@@ -140,7 +160,10 @@ int MainGame::process_input ()
     {
         glm::vec2 mouseCoords = _inputManager.get_mouse_coords();
         mouseCoords = _camera.convert_screen_to_world( mouseCoords );
+        _player.shoot( mouseCoords );
     }
+
+    _camera.setPosition( _player.get_pos() );
 
     return 0;
 }
@@ -160,11 +183,18 @@ void MainGame::drawGame ()
     glUniformMatrix4fv( pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]) );
 
     _spriteBatch.begin();
-    
-    for ( auto& s : _level.getSprites() )
+
+    for ( auto&& s : _level.getSprites() )
     {
-        _spriteBatch.add_sprite( s.pos, s.uv, s.texture.id, s.color, 1 );
+        _spriteBatch.add_sprite( s );
     }
+
+    for ( auto&& b : _player.get_bullets() )
+    {
+        _spriteBatch.add_sprite( b.get_sprite() );
+    }
+
+    _spriteBatch.add_sprite( _player.get_sprite() );
 
     _spriteBatch.end();
 

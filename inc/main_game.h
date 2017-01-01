@@ -11,13 +11,18 @@
 #include <jaogll/input_manager.h>
 #include <jaogll/timing.h>
 #include "level.h"
+#include "player.h"
 
 enum class GameState {PLAY, QUIT};
+
+
 
 class MainGame
 {
 public:
     MainGame ( unsigned w_width, unsigned w_height );
+
+    void init_agents ();
 
     /**
      * \brief Game's main entry point.
@@ -38,8 +43,6 @@ public:
     int process_input ();
 
     void drawGame ();
-
-    void add_sprite (  );
 
     virtual ~MainGame ();
 
@@ -65,6 +68,11 @@ private:
     JOGL::GLSLCompiler* _colorProgram;
 
     Level _level;
+
+    Player _player;
+    const glm::vec2 _player_start;
+
+    std::vector<Agent*> _agents;
 
     unsigned MAX_FPS;
 };

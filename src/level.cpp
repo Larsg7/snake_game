@@ -10,7 +10,7 @@ void Level::init ( std::string level_file, unsigned int spriteSize, JOGL::Color 
     JOGL::IOManager::read_file_to_buffer_line( _level, level_file );
 }
 
-std::vector<JOGL::Sprite>& Level::getSprites ()
+const std::vector<JOGL::Sprite>& Level::getSprites () const
 {
     return _sprites;
 }
@@ -29,7 +29,7 @@ void Level::generate_level ()
             auto mit = _assets.find( _level[i][j] );
             if ( mit != _assets.end() )
             {
-                _sprites.emplace_back( j * _spriteSize, i * _spriteSize, _spriteSize, _spriteSize, _color, mit->second );
+                _sprites.emplace_back( j * _spriteSize, i * _spriteSize, _spriteSize, _spriteSize, _color, mit->second, 0 );
             }
             else
             {
