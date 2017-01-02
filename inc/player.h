@@ -3,14 +3,14 @@
 #define ZOMBIE_PLAYER_H
 
 
-#include <zombie_game/inc/agent.h>
+#include "../inc/agent.h"
 #include <vector>
 #include "bullet.h"
 
 class Player : public Agent
 {
 public:
-    virtual void init ( float speed, JOGL::Sprite sprite, const Bullet& bullet_sample );
+    virtual void init ( float speed, JOGL::Sprite sprite, const Bullet& bullet_sample, float radius );
 
     void shoot ( glm::vec2 pos );
 

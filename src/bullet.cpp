@@ -1,8 +1,4 @@
-//
-// Created by lars on 1/1/17.
-//
-
-#include "zombie_game/inc/bullet.h"
+#include "../inc/bullet.h"
 
 void Bullet::update ()
 {

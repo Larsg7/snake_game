@@ -1,4 +1,4 @@
-#include "zombie_game/inc/level.h"
+#include "../inc/level.h"
 #include <jaogll/iomanager.h>
 #include <jaogll/logger.h>
 

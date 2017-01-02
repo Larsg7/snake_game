@@ -1,10 +1,11 @@
 
-#include "zombie_game/inc/player.h"
+#include "../inc/player.h"
 
-void Player::init ( float speed, JOGL::Sprite sprite, const Bullet& bullet_sample )
+void Player::init ( float speed, JOGL::Sprite sprite, const Bullet& bullet_sample, float radius )
 {
-    Agent::init( speed, sprite );
+    Agent::init( speed, sprite, 0, AgentType::PLAYER );
     _bullet_sample = bullet_sample;
+    _radius = radius;
 }
 
 void Player::shoot ( glm::vec2 pos )
@@ -19,7 +20,6 @@ void Player::update ()
     Agent::update();
     for ( auto it = _bullets.begin(); it != _bullets.end() && _bullets.size() > 0; ++it )
     {
-        printf( "%d\n", _bullets.size() );
         it->update();
         if ( ! it->is_alive() )
         {

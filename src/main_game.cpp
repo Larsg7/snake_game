@@ -1,8 +1,10 @@
+#include <algorithm>
 #include <GL/glew.h>
 #include <iostream>
 #include <jaogll/jaogll.h>
+#include <jaogll/resource_manager.h>
 
-#include "zombie_game/inc/main_game.h"
+#include "../inc/main_game.h"
 
 float Bullet::maxLiveTime = 100;
 
@@ -37,16 +39,33 @@ MainGame::MainGame ( unsigned w_width, unsigned w_height )
     init_agents();
 
     _camera.setPosition( _player_start );
+
+    // init collision manager
+    auto v = _level.getSprites();
+    JOGL::GLTexture floor = JOGL::ResourceManager::getTexture( "../media/Green_3_gridbox.png" );
+    _collision.set_level(
+            std::vector<JOGL::Sprite> (
+                    v.begin()
+                    , std::remove_if( v.begin(), v.end(), [floor]( JOGL::Sprite A ){
+                        return A.texture.id == floor.id;
+                    } )
+            )
+    );
+
+    std::vector<Agent*> a;
+    a.emplace_back( &_player );
+    _collision.set_agents( a );
 }
 
 void MainGame::init_agents ()
 {
     Bullet bullet_sample;
-    bullet_sample.init( 20, JOGL::Sprite ( 0, 0, 5, 5, white, "../media/PNG/Coin.png", 0 ) );
+    bullet_sample.init( 20, JOGL::Sprite( 0, 0, 5, 5, white, "../media/PNG/Coin.png", 0 ), 2.5, AgentType::BULLET );
     _player.init( 5
                  , JOGL::Sprite ( _player_start.x, _player_start.y, 40, 40, white
                     , "../media/PNG/CharacterRight_Standing.png", 0 )
-                 , bullet_sample );
+                 , bullet_sample
+                 , 20 );
 }
 
 void MainGame::initShaders ()
@@ -72,6 +91,9 @@ void MainGame::game_loop ()
         process_input();
 
         _camera.update();
+
+        _collision.update();
+
         _player.update();
 
         drawGame();
@@ -97,6 +119,7 @@ int MainGame::process_input ()
 
     const float CAMERA_SPEED = 1.0f;
     const float SCALE_SPEED = .01f;
+    static bool shot = false;
 
     while ( SDL_PollEvent( &event ) )
     {
@@ -156,11 +179,16 @@ int MainGame::process_input ()
     {
         _camera.setScale( _camera.getScale() - SCALE_SPEED );
     }
-    if ( _inputManager.is_key_presses( SDL_BUTTON_LEFT ) )
+    if ( ! shot && _inputManager.is_key_presses( SDL_BUTTON_LEFT ) )
     {
         glm::vec2 mouseCoords = _inputManager.get_mouse_coords();
         mouseCoords = _camera.convert_screen_to_world( mouseCoords );
         _player.shoot( mouseCoords );
+        shot = true;
+    }
+    if ( ! _inputManager.is_key_presses( SDL_BUTTON_LEFT ) )
+    {
+        shot = false;
     }
 
     _camera.setPosition( _player.get_pos() );

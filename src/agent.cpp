@@ -1,18 +1,18 @@
-#include "zombie_game/inc/agent.h"
+#include "../inc/agent.h"
 
-void Agent::init ( float speed, JOGL::Sprite sprite )
+void Agent::init ( float speed, JOGL::Sprite sprite, float radius, AgentType type )
 {
-    _pos.x = sprite.pos.x;
-    _pos.y = sprite.pos.y;
+    _pos = sprite.get_middle();
     _speed = speed;
     _sprite = sprite;
+    _radius = radius;
+    _type = type;
 }
 
 void Agent::update ()
 {
     _pos += _speed * _vel_unit;
-    _sprite.pos.x = _pos.x;
-    _sprite.pos.y = _pos.y;
+    _sprite.set_middle( _pos );
 }
 
 const JOGL::Sprite& Agent::get_sprite () const
@@ -28,15 +28,13 @@ const glm::vec2& Agent::get_pos () const
 void Agent::set_sprite ( const JOGL::Sprite& sprite )
 {
     _sprite = sprite;
-    _pos.x = sprite.pos.x;
-    _pos.y = sprite.pos.y;
+    _pos = sprite.get_middle();
 }
 
 void Agent::set_pos ( const glm::vec2& pos )
 {
     _pos = pos;
-    _sprite.pos.x = pos.x;
-    _sprite.pos.y = pos.y;
+    _sprite.set_middle( pos );
 }
 
 void Agent::set_vel_unit ( const glm::vec2& vel )
@@ -52,4 +50,9 @@ void Agent::set_speed ( float speed )
 const glm::vec2& Agent::get_vel_unit () const
 {
     return _vel_unit;
+}
+
+float Agent::get_radius () const
+{
+    return _radius;
 }

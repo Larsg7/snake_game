@@ -12,6 +12,7 @@
 #include <jaogll/timing.h>
 #include "level.h"
 #include "player.h"
+#include "collision_manager.h"
 
 enum class GameState {PLAY, QUIT};
 
@@ -68,6 +69,8 @@ private:
     JOGL::GLSLCompiler* _colorProgram;
 
     Level _level;
+
+    Collision_Manager _collision;
 
     Player _player;
     const glm::vec2 _player_start;

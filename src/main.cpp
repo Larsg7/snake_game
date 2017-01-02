@@ -2,7 +2,7 @@
 #include <jaogll/error.h>
 #include <jaogll/logger.h>
 
-#include "zombie_game/inc/main_game.h"
+#include "../inc/main_game.h"
 
 JOGL::LogLevel JOGL::Logger::current_log_level = JOGL::LogLevel::LOG_DEBUG;
 
@@ -16,7 +16,7 @@ int main ()
     }
     catch ( const JOGL::Jaogll_Error& e )
     {
-        fprintf( stderr, "FATAL ERROR - on line %d in file '%s':\n%s"
+        fprintf( stderr, "FATAL ERROR - on line %d in file '%s':\n%s\n"
                 , e.get_line(), e.get_file(), e.what() );
         return 1;
     }

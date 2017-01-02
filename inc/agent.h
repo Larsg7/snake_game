@@ -5,10 +5,17 @@
 
 #include <jaogll/sprite.h>
 
+enum class AgentType {
+    PLAYER,
+    HUMAN,
+    ZOMBIE,
+    BULLET
+};
+
 class Agent
 {
 public:
-    virtual void init ( float speed, JOGL::Sprite sprite );
+    virtual void init ( float speed, JOGL::Sprite sprite, float radius, AgentType type );
 
     virtual void update ();
 
@@ -17,6 +24,8 @@ public:
     const glm::vec2& get_pos () const;
 
     const glm::vec2& get_vel_unit () const;
+
+    float get_radius () const;
 
     void set_sprite ( const JOGL::Sprite& sprite );
 
@@ -31,6 +40,8 @@ protected:
     glm::vec2 _pos;
     glm::vec2 _vel_unit;
     float _speed;
+    float _radius;
+    AgentType _type;
 };
 
 
