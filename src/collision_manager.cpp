@@ -4,7 +4,6 @@
 void Collision_Manager::set_level ( const std::vector<JOGL::Sprite>& _level )
 {
     Collision_Manager::_level = _level;
-    printf( "%ld", _level.size() );
 }
 
 void Collision_Manager::set_agents ( const std::vector<Agent*>& _agents )
@@ -18,12 +17,32 @@ void Collision_Manager::update ()
     {
         for ( auto&& level : _level )
         {
-            if ( is_in_rectangle( agent->get_sprite().get_middle(), level.pos, agent->get_radius() ) )
+            if ( is_in_rectangle( agent->get_sprite().get_middle() + agent->get_vel_unit() * agent->get_speed()
+                                  , level.pos, agent->get_radius() ) )
             {
-                glm::vec2 hitDir = glm::normalize( level.get_middle() - agent->get_sprite().get_middle() );
+                glm::vec2 hitDir = glm::vec2 ( 0, 0 );
                 glm::vec2 oldVel = agent->get_vel_unit();
-                agent->set_vel_unit( oldVel - glm::dot( oldVel, hitDir ) * hitDir - 1.0f * hitDir );
+                glm::vec2 dir[4] = { glm::vec2( 0, 1 ), glm::vec2( 0, -1 ), glm::vec2( 1, 0 ), glm::vec2( -1, 0 ) };
+                for ( int i = 0; i < 4; ++i )
+                {
+                    if ( glm::dot( oldVel, dir[i] ) >= 1 / sqrt( 2 ) - 0.0001f )
+                    {
+                        hitDir = dir[i];
+                    }
+                }
+
+                glm::vec2 newVel = oldVel - glm::dot( oldVel, hitDir ) * hitDir;
+                printf( "%lf : %lf %lf : %lf %lf : %lf\n", oldVel.x, oldVel.y, hitDir.x, hitDir.y, newVel.x, newVel.y );
+                if ( glm::length( newVel ) == 0 )
+                {
+                    agent->set_vel_unit( glm::vec2 ( 0, 0 ) );
+                }
+                else
+                {
+                    agent->set_vel_unit( glm::normalize( newVel) );
+                }
                 //agent->set_pos( agent->get_pos() - 1.0f * hitDir );
+                break;
             }
         }
     }

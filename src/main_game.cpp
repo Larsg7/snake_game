@@ -148,33 +148,30 @@ int MainGame::process_input ()
         }
     }
 
-    if ( _inputManager.is_key_presses( SDLK_w ) )
+    std::map<unsigned int,glm::vec2> dirs {
+            {SDLK_w, glm::vec2( 0, 1 )},
+            {SDLK_s, glm::vec2( 0, -1 )},
+            {SDLK_a, glm::vec2( -1, 0 )},
+            {SDLK_d, glm::vec2( 1, 0 )}
+    };
+
+    int pressed = 0;
+
+    for ( auto&& dir : dirs )
     {
-        _player.set_vel_unit( glm::normalize( _player.get_vel_unit() + glm::vec2 ( 0, 1 ) ) );
+        if ( _inputManager.is_key_presses( dir.first ) )
+        {
+            if ( ! glm::dot( _player.get_vel_unit(), dir.second ) > 0 )
+                _player.set_vel_unit( glm::normalize( _player.get_vel_unit() + dir.second ) );
+            pressed++;
+        }
     }
-    if ( _inputManager.is_key_presses( SDLK_s ) )
-    {
-        _player.set_vel_unit( glm::normalize( _player.get_vel_unit() + glm::vec2 ( 0, -1 ) ) );
-    }
-    if ( _inputManager.is_key_presses( SDLK_a ) )
-    {
-        _player.set_vel_unit( glm::normalize( _player.get_vel_unit() + glm::vec2 ( -1, 0 ) ) );
-    }
-    if ( _inputManager.is_key_presses( SDLK_d ) )
-    {
-        _player.set_vel_unit( glm::normalize( _player.get_vel_unit() + glm::vec2 ( 1, 0 ) ) );
-    }
-    if ( ! _inputManager.is_key_presses( SDLK_w )
-      && ! _inputManager.is_key_presses( SDLK_s )
-      && ! _inputManager.is_key_presses( SDLK_a )
-      && ! _inputManager.is_key_presses( SDLK_d ) )
+
+    if ( pressed == 0 )
     {
         _player.set_vel_unit( glm::vec2 ( 0, 0 ) );
     }
-    if ( _inputManager.is_key_presses( SDLK_q ) )
-    {
-        _camera.setScale( _camera.getScale() + SCALE_SPEED );
-    }
+
     if ( _inputManager.is_key_presses( SDLK_e ) )
     {
         _camera.setScale( _camera.getScale() - SCALE_SPEED );
@@ -190,6 +187,8 @@ int MainGame::process_input ()
     {
         shot = false;
     }
+
+    printf( "%lf : %lf\n", _player.get_vel_unit().x, _player.get_vel_unit().y );
 
     _camera.setPosition( _player.get_pos() );
 

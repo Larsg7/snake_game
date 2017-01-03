@@ -27,6 +27,10 @@ public:
 
     float get_radius () const;
 
+    AgentType get_type () const;
+
+    float get_speed () const;
+
     void set_sprite ( const JOGL::Sprite& sprite );
 
     void set_pos ( const glm::vec2& pos );

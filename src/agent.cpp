@@ -56,3 +56,13 @@ float Agent::get_radius () const
 {
     return _radius;
 }
+
+float Agent::get_speed () const
+{
+    return _speed;
+}
+
+AgentType Agent::get_type () const
+{
+    return _type;
+}
