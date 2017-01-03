@@ -21,8 +21,8 @@ public:
     static float maxLiveTime;
 
 private:
-    bool _alive;
     float _liveTime;
+    bool _alive;
 };
 
 

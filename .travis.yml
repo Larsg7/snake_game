@@ -18,5 +18,10 @@ before_install:
  - make
  - sudo make install
  - cd ../../../
+ - git clone https://github.com/Larsg7/jaogll.git
+ - cd jaogll
+ - make
+ - sudo make install
+ - cd ..
 script:
- - make all
+ - make
