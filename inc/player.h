@@ -16,11 +16,11 @@ public:
 
     virtual void update ();
 
-    const std::vector<Bullet>& get_bullets () const;
+    const std::vector<Bullet*>& get_bullets () const;
 
 private:
     Bullet _bullet_sample;
-    std::vector<Bullet> _bullets;
+    std::vector<Bullet*> _bullets;
 };
 
 

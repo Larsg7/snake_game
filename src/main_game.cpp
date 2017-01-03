@@ -6,14 +6,14 @@
 
 #include "../inc/main_game.h"
 
-float Bullet::maxLiveTime = 100;
+float Bullet::maxLiveTime = 1000;
 
 const JOGL::Color white ( 255, 255, 255, 255 );
 
 MainGame::MainGame ( unsigned w_width, unsigned w_height )
     : _w_width ( w_width )
       , _w_height ( w_height )
-      , MAX_FPS ( 60 )
+      , MAX_FPS ( 144 )
       , _gameState ( GameState::PLAY )
       ,  _player_start ( 200, 200 )
 {
@@ -60,8 +60,8 @@ MainGame::MainGame ( unsigned w_width, unsigned w_height )
 void MainGame::init_agents ()
 {
     Bullet bullet_sample;
-    bullet_sample.init( 20, JOGL::Sprite( 0, 0, 5, 5, white, "../media/PNG/Coin.png", 0 ), 2.5, AgentType::BULLET );
-    _player.init( 5
+    bullet_sample.init( 10, JOGL::Sprite( 0, 0, 5, 5, white, "../media/PNG/Coin.png", 0 ), 3, AgentType::BULLET );
+    _player.init( 3
                  , JOGL::Sprite ( _player_start.x, _player_start.y, 40, 40, white
                     , "../media/PNG/CharacterRight_Standing.png", 0 )
                  , bullet_sample
@@ -91,6 +91,17 @@ void MainGame::game_loop ()
         process_input();
 
         _camera.update();
+
+        std::vector<Agent*> a;
+        a.emplace_back( &_player );
+        auto v = _player.get_bullets();
+
+        for ( auto&& b : v )
+        {
+            a.emplace_back( b );
+        }
+
+        _collision.set_agents( a );
 
         _collision.update();
 
@@ -155,21 +166,24 @@ int MainGame::process_input ()
             { SDLK_d, glm::vec2( 1, 0 ) }
     };
 
-    int pressed = 0;
+    _player.set_vel_unit( glm::vec2 ( 0, 0 ) );
 
     for ( auto&& dir : dirs )
     {
         if ( _inputManager.is_key_presses( dir.first ) )
         {
             if ( ! ( glm::dot( _player.get_vel_unit(), dir.second ) > 0 ) )
-                _player.set_vel_unit( glm::normalize( _player.get_vel_unit() + dir.second ) );
-            pressed++;
+            {
+                if ( _player.get_vel_unit() + dir.second == glm::vec2 ( 0, 0 ) )
+                {
+                    _player.set_vel_unit( glm::vec2 ( 0, 0 ) );
+                }
+                else
+                {
+                    _player.set_vel_unit( glm::normalize( _player.get_vel_unit() + dir.second ) );
+                }
+            }
         }
-    }
-
-    if ( pressed == 0 )
-    {
-        _player.set_vel_unit( glm::vec2 ( 0, 0 ) );
     }
 
     if ( _inputManager.is_key_presses( SDLK_q ) )
@@ -222,7 +236,7 @@ void MainGame::drawGame ()
 
     for ( auto&& b : _player.get_bullets() )
     {
-        _spriteBatch.add_sprite( b.get_sprite() );
+        _spriteBatch.add_sprite( b->get_sprite() );
     }
 
     _spriteBatch.add_sprite( _player.get_sprite() );

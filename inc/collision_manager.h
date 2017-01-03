@@ -27,7 +27,7 @@ private:
      * \param rec    The rectangle
      * \return glm::vec2
      */
-    std::pair<float,glm::vec2> get_hit_x_and_dir ( Agent* agent, glm::vec4 rec ) const;
+    std::pair<glm::vec2,glm::vec2> get_hit_pos_and_dir ( Agent* agent, glm::vec4 rec ) const;
 
     bool is_in_interval ( float x, float a, float b ) const;
 };
