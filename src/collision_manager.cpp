@@ -2,6 +2,7 @@
 #include <map>
 #include <algorithm>
 #include "../inc/collision_manager.h"
+#include "../inc/bullet.h"
 
 void Collision_Manager::set_level ( const std::vector<JOGL::Sprite>& _level )
 {
@@ -13,55 +14,75 @@ void Collision_Manager::set_agents ( const std::vector<Agent*>& _agents )
     Collision_Manager::_agents = _agents;
 }
 
-void Collision_Manager::update ()
+Agent* Collision_Manager::collide ( Agent* agent )
 {
-    for ( auto&& agent : _agents )
+    // if the agent is not moving, continue
+    if ( agent->get_vel_unit() == glm::vec2 ( 0, 0 ) )
     {
-        if ( agent->get_vel_unit() == glm::vec2 ( 0, 0 ) )
+        return nullptr;
+    }
+
+    Agent* c_agent = nullptr;
+
+    std::vector<std::pair<glm::vec2,glm::vec2>> hits;
+    glm::vec2 hitDir;
+
+    for ( auto&& level : _level )
+    {
+        std::pair<glm::vec2,glm::vec2> hit = get_hit_pos_and_dir( agent, level.pos );
+
+        if ( ( hit.second != glm::vec2 ( 0, 0 ) ) )
         {
-            continue;
-        }
-
-        std::vector<std::pair<glm::vec2,glm::vec2>> hits;
-        glm::vec2 hitDir;
-
-        for ( auto&& level : _level )
-        {
-            std::pair<glm::vec2,glm::vec2> hit = get_hit_pos_and_dir( agent, level.pos );
-
-            if ( ( hit.second != glm::vec2 ( 0, 0 ) ) )
-            {
-                hits.push_back( hit );
-            }
-        }
-
-        if ( hits.size() == 0 )
-        {
-            continue;
-        }
-
-        //printf( "%ld\n", hits.size() );
-
-        std::sort( hits.begin(), hits.end(), [agent]( std::pair<glm::vec2,glm::vec2> A, std::pair<glm::vec2,glm::vec2> B ) {
-            glm::vec2 oldPos = agent->get_pos();
-            return glm::length( oldPos - A.first ) < glm::length( oldPos - B.first );
-        } );
-
-        hitDir = hits.begin()->second;
-
-        glm::vec2 oldVel = agent->get_vel_unit();
-
-        glm::vec2 newVel = oldVel - glm::dot( oldVel, hitDir ) * hitDir;
-        //printf( "%lf : %lf %lf : %lf %lf : %lf\n", oldVel.x, oldVel.y, hitDir.x, hitDir.y, newVel.x, newVel.y );
-        if ( glm::length( newVel ) == 0 || hits.size() == 3 )
-        {
-            agent->set_vel_unit( glm::vec2 ( 0, 0 ) );
-        }
-        else
-        {
-            agent->set_vel_unit( glm::normalize( newVel ) );
+            hits.push_back( hit );
         }
     }
+
+    for ( auto&& a : _agents )
+    {
+        glm::vec2 dist = a->get_pos() - agent->get_pos();
+        if ( a == agent || (glm::length( dist ) > (a->get_radius() + agent->get_radius())) )
+        {
+            continue;
+        }
+
+        agent->set_pos( agent->get_pos()
+                        - glm::normalize( dist ) * ( (a->get_radius() + agent->get_radius()) -  glm::length( dist )) );
+        c_agent = a;
+        hits.emplace_back();
+    }
+
+    // if there were no hits, continue
+    if ( hits.size() == 0 )
+    {
+        return nullptr;
+    }
+
+    // sort hits so that the nearest hit is closest
+    std::sort( hits.begin(), hits.end(), [agent]( std::pair<glm::vec2,glm::vec2> A, std::pair<glm::vec2,glm::vec2> B ) {
+        glm::vec2 oldPos = agent->get_pos();
+        return glm::length( oldPos - A.first ) < glm::length( oldPos - B.first );
+    } );
+
+    // use closest hit as hitDir
+    hitDir = hits.begin()->second;
+
+    glm::vec2 oldVel = agent->get_vel_unit();
+
+    // should bullets bounce?
+    float bounce = (agent->get_type() == AgentType::BULLET) ? 1.9f : 1.0f;
+
+    glm::vec2 newVel = oldVel - glm::dot( oldVel, hitDir ) * hitDir * bounce;
+    //printf( "%lf : %lf %lf : %lf %lf : %lf\n", oldVel.x, oldVel.y, hitDir.x, hitDir.y, newVel.x, newVel.y );
+    if ( glm::length( newVel ) == 0 || hits.size() == 3 ) // last one to fix the corners
+    {
+        agent->set_vel_unit( glm::vec2 ( 0, 0 ) );
+    }
+    else
+    {
+        agent->set_vel_unit( newVel );
+    }
+
+    return c_agent;
 }
 
 std::pair<glm::vec2,glm::vec2> Collision_Manager::get_hit_pos_and_dir ( Agent* agent, glm::vec4 rec ) const
@@ -71,6 +92,7 @@ std::pair<glm::vec2,glm::vec2> Collision_Manager::get_hit_pos_and_dir ( Agent* a
     glm::vec2 newPos = oldPos + agent->get_vel_unit() * agent->get_speed();
     glm::vec2 vel = agent->get_vel_unit();
 
+    // rectangle with radius
     float left = rec.x - radius;
     float right = rec.x + rec.z + radius;
     float bottom = rec.y - radius;
@@ -126,6 +148,7 @@ std::pair<glm::vec2,glm::vec2> Collision_Manager::get_hit_pos_and_dir ( Agent* a
     {
         return std::make_pair( glm::vec2 ( 0, 0 ), glm::vec2 ( 0, 0 ) );
     }
+    // sort hits so that nearest is first
     std::sort( hits.begin(), hits.end(), [oldPos]( std::pair<glm::vec2,glm::vec2> A, std::pair<glm::vec2,glm::vec2> B ) {
         return glm::length( oldPos - A.first ) < glm::length( oldPos - B.first );
     } );

@@ -13,6 +13,8 @@
 #include "level.h"
 #include "player.h"
 #include "collision_manager.h"
+#include "zombie.h"
+#include "agent_manager.h"
 
 enum class GameState {PLAY, QUIT};
 
@@ -48,6 +50,10 @@ public:
     virtual ~MainGame ();
 
 private:
+    void collide ();
+
+    void zombie_follow ();
+
     /** Main game window */
     JOGL::Window _window;
 
@@ -72,10 +78,12 @@ private:
 
     Collision_Manager _collision;
 
-    Player _player;
+    Agent_Manager _agent_manager;
+
+    Player* _player;
     const glm::vec2 _player_start;
 
-    std::vector<Agent*> _agents;
+    std::vector<Zombie*> _zombies;
 
     unsigned MAX_FPS;
 };

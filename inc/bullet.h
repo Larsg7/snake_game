@@ -16,6 +16,8 @@ public:
 
     virtual void update ();
 
+    void set_alive ( bool _alive );
+
     bool is_alive () const;
 
     static float maxLiveTime;

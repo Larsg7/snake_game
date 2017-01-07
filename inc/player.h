@@ -9,18 +9,7 @@
 
 class Player : public Agent
 {
-public:
-    virtual void init ( float speed, JOGL::Sprite sprite, const Bullet& bullet_sample, float radius );
 
-    void shoot ( glm::vec2 pos );
-
-    virtual void update ();
-
-    const std::vector<Bullet*>& get_bullets () const;
-
-private:
-    Bullet _bullet_sample;
-    std::vector<Bullet*> _bullets;
 };
 
 

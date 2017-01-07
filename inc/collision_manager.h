@@ -14,7 +14,12 @@ public:
 
     void set_agents ( const std::vector<Agent*>& _agents );
 
-    void update ();
+    /**
+     * \brief Returns the agent the given agent collided with, or a nullptr if none was encountered.
+     * \param agent
+     * \return Agent*
+     */
+    Agent* collide ( Agent* agent );
 
 private:
     std::vector<JOGL::Sprite> _level;
@@ -22,7 +27,7 @@ private:
 
     /**
      * \brief Returns direction at which a rectangle 'rec' will get hit (perpendicular to its sides)
-     *        or (0,0) if rectangle will not get hit in the next frame.
+     *        or (0,0) if rectangle will not get hit in the next frame and the position of this hit.
      * \param agent  The agent to check
      * \param rec    The rectangle
      * \return glm::vec2
