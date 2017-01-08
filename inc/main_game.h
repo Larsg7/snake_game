@@ -16,7 +16,7 @@
 #include "zombie.h"
 #include "agent_manager.h"
 
-enum class GameState {PLAY, QUIT};
+enum class GameState {PLAY, GAMEOVER, QUIT};
 
 
 
@@ -40,6 +40,8 @@ public:
      */
     void game_loop ();
 
+    static void set_gameState ( GameState _gameState );
+
     /**
      * \brief Contains logic to handle input.
      */
@@ -52,13 +54,11 @@ public:
 private:
     void collide ();
 
-    void zombie_follow ();
-
     /** Main game window */
     JOGL::Window _window;
 
     /** Current game state */
-    GameState _gameState;
+    static GameState _gameState;
 
     /** Screen dimensions */
     const unsigned _w_width;

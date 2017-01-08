@@ -7,6 +7,7 @@
 #include "agent.h"
 #include "player.h"
 #include "zombie.h"
+#include "human.h"
 
 class Agent_Manager
 {
@@ -25,13 +26,20 @@ public:
 
     const std::vector<Agent*>& get_agents () const;
 
+    void ai ();
+
     void update ();
 
 private:
+    void ai_zombie ( Zombie* zombie );
+    void ai_human ( Human* human );
+
     void update_zombie ( Zombie* zombie );
-    void update_human ( Agent* human );
+    void update_human ( Human* human );
     void update_bullet ( Bullet* bullet );
     void update_player ();
+
+    void erase_agent ( Agent* agent );
 
     std::vector<Agent*> _agents;
     Player* _player;

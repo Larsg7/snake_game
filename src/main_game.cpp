@@ -5,16 +5,18 @@
 #include <jaogll/resource_manager.h>
 
 #include "../inc/main_game.h"
+#include "../inc/human.h"
 
 float Bullet::maxLiveTime = 100;
 
 const JOGL::Color white ( 255, 255, 255, 255 );
 
+GameState MainGame::_gameState = GameState::PLAY;
+
 MainGame::MainGame ( unsigned w_width, unsigned w_height )
     : _w_width ( w_width )
       , _w_height ( w_height )
       , MAX_FPS ( 144 )
-      , _gameState ( GameState::PLAY )
       ,  _player_start ( 200, 200 )
       , _player ( new Player )
 {
@@ -61,7 +63,6 @@ MainGame::MainGame ( unsigned w_width, unsigned w_height )
 
 void MainGame::init_agents ()
 {
-
     _player->init( 3
             , JOGL::Sprite ( _player_start.x, _player_start.y, 40, 40, white
                     , "../media/PNG/CharacterRight_Standing.png", 0 )
@@ -71,11 +72,24 @@ void MainGame::init_agents ()
     _zombies.push_back( new Zombie );
     _zombies.back()->init( 1
             , JOGL::Sprite ( _player_start.x + 100, _player_start.y + 100, 40, 40, white
-                    , "../media/PNG/CharacterRight_Standing.png", 0 )
+                    , "../media/PNG/CharacterLeft_Standing.png", 0 )
             , 20
             , AgentType::ZOMBIE );
-    _zombies.back()->set_player( _player );
     _agent_manager.add_agent( dynamic_cast<Agent*>(_zombies.back()) );
+
+    std::vector<Human*> humans;
+
+    // set up humans
+    for ( int i = 0; i < 2; ++i )
+    {
+        humans.emplace_back( new Human );
+        humans.back()->init( 1
+                , JOGL::Sprite ( 500 + 50 * i, 200, 40, 40, white
+                        , "../media/PNG/CharacterRight_Standing.png", 0 )
+                , 20
+                , AgentType::HUMAN );
+        _agent_manager.add_agent( dynamic_cast<Human*>(humans.back()) );
+    }
 }
 
 void MainGame::initShaders ()
@@ -95,11 +109,11 @@ void MainGame::run ()
 
 void MainGame::game_loop ()
 {
-    while ( _gameState == GameState::PLAY )
+    while ( _gameState != GameState::QUIT )
     {
         process_input();
 
-        zombie_follow();
+        _agent_manager.ai();
 
         _camera.update();
 
@@ -127,15 +141,8 @@ void MainGame::collide ()
         if ( a != nullptr )
         {
             _agent_manager.agent_collided( agent, a );
+            _agent_manager.agent_collided( a, agent );
         }
-    }
-}
-
-void MainGame::zombie_follow ()
-{
-    for ( auto&& zombie : _zombies )
-    {
-        zombie->follow_player();
     }
 }
 
@@ -152,7 +159,7 @@ int MainGame::process_input ()
         switch ( event.type )
         {
             case SDL_QUIT:
-                _gameState = GameState::QUIT;
+                MainGame::set_gameState( GameState::QUIT );
                 break;
             case SDL_KEYDOWN:
                 _inputManager.press_key( event.key.keysym.sym );
@@ -266,4 +273,9 @@ void MainGame::drawGame ()
 MainGame::~MainGame ()
 {
     SDL_Quit();
+}
+
+void MainGame::set_gameState ( GameState _gameState )
+{
+    MainGame::_gameState = _gameState;
 }

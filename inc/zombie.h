@@ -7,13 +7,7 @@
 
 class Zombie : public Agent
 {
-public:
-    void follow_player ();
 
-    void set_player ( Player* _player );
-
-private:
-    Player* _player;
 };
 
 
