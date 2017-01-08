@@ -6,6 +6,7 @@
 
 #include "../inc/main_game.h"
 #include "../inc/human.h"
+#include "../inc/constants.h"
 
 float Bullet::maxLiveTime = 100;
 
@@ -57,7 +58,7 @@ MainGame::MainGame ( unsigned w_width, unsigned w_height )
 
     _agent_manager.init( _player );
     Bullet bullet_sample;
-    bullet_sample.init( 10, JOGL::Sprite( 0, 0, 5, 5, white, "../media/PNG/Coin.png", 0 ), 3, AgentType::BULLET );
+    bullet_sample.init( 10, JOGL::Sprite( 0, 0, 5, 5, white, BULLET_IMAGE, 0 ), 3, AgentType::BULLET );
     _agent_manager.add_bullet_sample( bullet_sample );
 }
 
@@ -65,14 +66,14 @@ void MainGame::init_agents ()
 {
     _player->init( 3
             , JOGL::Sprite ( _player_start.x, _player_start.y, 40, 40, white
-                    , "../media/PNG/CharacterRight_Standing.png", 0 )
+                    , PLAYER_IMAGE, 0 )
             , 20
             , AgentType::PLAYER );
 
     _zombies.push_back( new Zombie );
     _zombies.back()->init( 1
             , JOGL::Sprite ( _player_start.x + 100, _player_start.y + 100, 40, 40, white
-                    , "../media/PNG/CharacterLeft_Standing.png", 0 )
+                    , ZOMBIE_IMAGE, 0 )
             , 20
             , AgentType::ZOMBIE );
     _agent_manager.add_agent( dynamic_cast<Agent*>(_zombies.back()) );
@@ -85,7 +86,7 @@ void MainGame::init_agents ()
         humans.emplace_back( new Human );
         humans.back()->init( 1
                 , JOGL::Sprite ( 500 + 50 * i, 200, 40, 40, white
-                        , "../media/PNG/CharacterRight_Standing.png", 0 )
+                        , HUMAN_IMAGE, 0 )
                 , 20
                 , AgentType::HUMAN );
         _agent_manager.add_agent( dynamic_cast<Human*>(humans.back()) );
